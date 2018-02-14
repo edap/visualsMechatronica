@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxMaxim.h"
 #include "fftPlotter.h"
+#include "ofxAutoReloadedShader.h"
 
 class ofApp : public ofBaseApp{
 
@@ -43,12 +44,12 @@ private:
     // end audio
 
     //graphics vars
-    ofLight          light;
-    ofShader         rayMarching;
-    ofImage          image0;
-    ofTexture        tex0;
-    ofPlanePrimitive plane;
-    ofEasyCam        cam;
+    ofLight               light;
+    ofxAutoReloadedShader rayMarching;
+    ofImage               image0;
+    ofTexture             tex0;
+    ofPlanePrimitive      plane;
+    ofEasyCam             cam;
     //end graphics
 
 

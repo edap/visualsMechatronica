@@ -12,9 +12,9 @@ void ofApp::setup(){
     shader.load("shadersES2/shader");
 #else
     if(ofIsGLProgrammableRenderer()){
-        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag");
+        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag", "");
     }else{
-        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag");
+        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag", "");
     }
 #endif
 

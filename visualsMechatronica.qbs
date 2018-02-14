@@ -12,6 +12,8 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            "bin/data/shaders_gl3/march1.frag",
+            "bin/data/shaders_gl3/passthruogh.vert",
             "src/fftPlotter.cpp",
             "src/fftPlotter.h",
             'src/main.cpp',
