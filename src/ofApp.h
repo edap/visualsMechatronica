@@ -33,7 +33,7 @@ private:
     // Audio vars
     bool          plotfft = false;
     bool          audioDisabled = false;
-    int		  bufferSize;
+    int		      bufferSize;
     int           sampleRate;
     int           fftSize;
     ofxMaxiSample sample;
