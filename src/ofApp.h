@@ -4,6 +4,10 @@
 #include "ofxMaxim.h"
 #include "fftPlotter.h"
 #include "ofxAutoReloadedShader.h"
+#include "ofxAnimationPrimitives.h"
+//Context
+#include "ofxGlobalContext.h"
+#include "context/AppTime.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,10 +29,14 @@ public:
     void gotMessage(ofMessage msg);
 
 private:
+    void init_context();
     // Methods
     void setUniforms();
     void audioOut(float * output, int bufferSize, int nChannels);
     void setupAudio();
+
+    // Animation Primitives
+    ofxAnimationPrimitives::SceneManager SM;
 
     // Audio vars
     bool          audioDisabled = false;
@@ -48,6 +56,6 @@ private:
     ofImage               image0;
     ofTexture             tex0;
     ofPlanePrimitive      plane;
-    ofFbo                 fbo;
+    ofFbo                 finalFbo;
     //end graphics
 };

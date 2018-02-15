@@ -1,12 +1,13 @@
 #include "ofApp.h"
-#include "Context.h"
+#include "Scenes.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetVerticalSync(true);
     init_context();
+    SM.addScene<Scene0>(42);
 
-
-    fbo.allocate(1280, 720, GL_RGBA);
+    finalFbo.allocate(1280, 720, GL_RGBA);
     ofDisableArbTex();
     plane.setResolution(2,2);
     plane.setPosition(ofGetWidth()/2, ofGetHeight()/2, 0);
@@ -27,26 +28,28 @@ void ofApp::setup(){
 
     setupAudio();
 
-    fbo.begin();
+    finalFbo.begin();
     ofClear(255,255,255, 0);
-    fbo.end();
+    finalFbo.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    fbo.begin();
+    ofxGlobalContext::Manager::defaultManager().update();
+
+    finalFbo.begin();
     tex0.bind();
     rayMarching.begin();
     setUniforms();
     plane.draw();
     rayMarching.end();
     tex0.unbind();
-    fbo.end();
+    finalFbo.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    fbo.draw(0,0);
+    finalFbo.draw(0,0);
 }
 
 void ofApp::setUniforms(){
@@ -142,4 +145,8 @@ void ofApp::setupAudio(){
     // TODO, Change with stream options
     ofSoundStreamSetup(2,2,this, sampleRate, bufferSize, 4);
     //ofSetBackgroundColor(255, 200, 0);
+}
+
+void ofApp::init_context(){
+    ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
 }

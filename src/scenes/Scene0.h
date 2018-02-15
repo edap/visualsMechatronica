@@ -1,8 +1,8 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
-
-ofxAnimationPrimitives::SceneManager SM;
+#include "ofxLayer.h"
+#include "../layers/RayMarchRings.h"
 
 class Scene0 : public ofxAnimationPrimitives::Scene{
 public:
@@ -16,4 +16,7 @@ public:
     void viewDidAppear();
     void viewWillDisappear();
     void viewDidDisappear();
+
+    ofxAnimationPrimitives::SceneManager SM;
+    ofxLayer::Manager LM;
 };

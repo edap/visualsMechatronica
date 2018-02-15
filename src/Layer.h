@@ -1,6 +1,5 @@
 #pragma once
 #include "ofxLayer.h"
-//#include "Context.h"
 
 class Layer : public ofxLayer::Layer
 {

@@ -2,19 +2,17 @@
 
 Scene0::Scene0(const int arg0) {
     cout << "Scene0: " << arg0 << endl;
+    LM.setup(ofGetWidth(), ofGetHeight());
+    LM.createLayer<RayMarchRings>(0.3);
 }
 
 void Scene0::update(){
+    LM.update();
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void Scene0::draw(){
-    ofSetColor(100, 0, 0, 255 * getAlpha());
-    ofRect(0, 0, ofGetWidth() / 2, ofGetHeight());
-
-
-    ofSetColor(255);
-    ofDrawBitmapString("SCENE0 alpha:" + ofToString(getAlpha(), 3), 10, 20);
+     LM.draw();
 }
 
 void Scene0::viewWillAppear() {

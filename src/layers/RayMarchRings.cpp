@@ -26,7 +26,6 @@ void RayMarchRings::setup(){
     fbo.end();
 }
 
-//--------------------------------------------------------------
 void RayMarchRings::update(){
     fbo.begin();
     tex0.bind();
@@ -38,7 +37,6 @@ void RayMarchRings::update(){
     fbo.end();
 }
 
-//--------------------------------------------------------------
 void RayMarchRings::draw(){
     fbo.draw(0,0);
 }
