@@ -14,6 +14,7 @@ Project{
         files: [
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "src/Context.h",
             "src/Layer.h",
             "src/clips/Clip0.cpp",
             "src/clips/Clip0.h",

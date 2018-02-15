@@ -1,7 +1,11 @@
 #include "ofApp.h"
+#include "Context.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    init_context();
+
+
     fbo.allocate(1280, 720, GL_RGBA);
     ofDisableArbTex();
     plane.setResolution(2,2);
