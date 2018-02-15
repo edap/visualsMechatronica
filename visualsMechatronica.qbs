@@ -14,24 +14,30 @@ Project{
         files: [
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "src/Layer.h",
+            "src/clips/Clip0.cpp",
+            "src/clips/Clip0.h",
             "src/fftPlotter.cpp",
             "src/fftPlotter.h",
+            "src/layers/RayMarchRings.cpp",
+            "src/layers/RayMarchRings.h",
             "src/scenes/Scene0.cpp",
             "src/scenes/Scene0.h",
             "src/scenes/Scene1.cpp",
             "src/scenes/Scene1.h",
-            'src/main.cpp',
-            'src/ofApp.cpp',
-            'src/ofApp.h',
+            "src/main.cpp",
+            "src/ofApp.cpp",
+            "src/ofApp.h",
         ]
 
         of.addons: [
             'ofxAssimpModelLoader',
             'ofxGui',
-            'ofxLayers',
+            'ofxLayer',
             'ofxMaxim',
             'ofxAutoReloadedShader',
-            'ofxAnimationPrimitives'
+            'ofxAnimationPrimitives',
+            'ofxGlobalContext'
         ]
 
         // additional flags for the project. the of module sets some

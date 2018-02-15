@@ -4,7 +4,6 @@ Scene0::Scene0(const int arg0) {
     cout << "Scene0: " << arg0 << endl;
 }
 
-
 void Scene0::update(){
     cout << __PRETTY_FUNCTION__ << endl;
 }

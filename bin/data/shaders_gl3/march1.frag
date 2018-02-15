@@ -200,4 +200,5 @@ void main(){
     //
     //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
     fragColor = vec4(color , 1.0);
+    //fragColor = vec4(vec3(1.,0.,0.), 1.);
 }

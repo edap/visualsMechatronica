@@ -31,7 +31,6 @@ private:
     void setupAudio();
 
     // Audio vars
-    bool          plotfft = false;
     bool          audioDisabled = false;
     int		      bufferSize;
     int           sampleRate;
@@ -49,8 +48,6 @@ private:
     ofImage               image0;
     ofTexture             tex0;
     ofPlanePrimitive      plane;
-    ofEasyCam             cam;
+    ofFbo                 fbo;
     //end graphics
-
-
 };
