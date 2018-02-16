@@ -4,14 +4,15 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetVerticalSync(true);
+    setupAudio();
+
+    //Scenes
     init_context();
     SM.addScene<Scene0>(42);
     SM.changeScene("Scene0");
 
+    //FBO
     finalFbo.allocate(1280, 720, GL_RGBA);
-
-    setupAudio();
-
     finalFbo.begin();
     ofClear(0, 0, 0, 0);
     finalFbo.end();
@@ -20,28 +21,22 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     ofxGlobalContext::Manager::defaultManager().update();
-
     SM.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    // fullfill the FBO
     finalFbo.begin();
     ofClear(0, 0, 0, 255);
     SM.draw();
     finalFbo.end();
 
+    // draw the FBO
     ofSetColor(255);
     finalFbo.draw(0, 0);
 }
 
-void ofApp::setUniforms(){
-    float resolution[] = {float(ofGetWidth()), float(ofGetHeight())};
-    float time = ofGetElapsedTimef();
-    rayMarching.setUniform1f("iGlobalTime",time);
-    rayMarching.setUniform2fv("resolution",resolution);
-    rayMarching.setUniformTexture("tex0",image0.getTexture(),0);
-}
 
 //--------------------------------------------------------------
 void ofApp::audioOut(float * output, int bufferSize, int nChannels){
@@ -132,4 +127,5 @@ void ofApp::setupAudio(){
 
 void ofApp::init_context(){
     ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
+    ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(fft, fftSize);
 }

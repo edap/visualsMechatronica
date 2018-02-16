@@ -10,7 +10,6 @@ public:
     OFX_LAYER_DEFINE_LAYER_CLASS(RayMarchRings)
 
     void setup();
-    void update();
     void draw();
 
 private:

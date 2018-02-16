@@ -8,6 +8,7 @@
 //Context
 #include "ofxGlobalContext.h"
 #include "context/AppTime.h"
+#include "context/AudioAnalysis.h"
 
 class ofApp : public ofBaseApp{
 
@@ -31,7 +32,6 @@ public:
 private:
     void init_context();
     // Methods
-    void setUniforms();
     void audioOut(float * output, int bufferSize, int nChannels);
     void setupAudio();
 
