@@ -1,25 +1,28 @@
 #include "AudioAnalysis.h"
 
-AudioAnalysis::AudioAnalysis(const ofxMaxiFFT& _fft, const int& _fftSize){
+AudioAnalysis::AudioAnalysis(const ofxMaxiFFT& _fft, const int& _fftSize, const maxiFFTOctaveAnalyzer& _oct){
     fft = _fft;
     fftSize = _fftSize;
+    oct = _oct;
 }
 
 void AudioAnalysis::update(){
-    for(int i = 0; i < fftSize ;i++){
-//        int r = float(255) / float(fftSize) * i;
-//        int g = 40;
-//        int b = 255 - r;
-//        ofSetColor(r, g, b);
-//        ofDrawCircle(ofGetWidth()/2 +width * i,
-//                     ofGetHeight()/2, fft.magnitudes[i] * 2);
+// test to see if it was working
+//    for(int i = 0; i < fftSize ;i++){
+//        cout << fft.magnitudesDB[i] << endl;
+//    }
+}
 
-//        ofDrawCircle(ofGetWidth()/2 -width * i,
-//                     ofGetHeight()/2, fft.magnitudes[i] * 2);
-//        ofDrawRectangle(i * 2, ofGetHeight(), 2, -(fft.magnitudesDB[i]) * 8);
+int AudioAnalysis::getFFTSize()const {
+    return fftSize;
+}
 
-        cout << fft.magnitudesDB[i] << endl;
-    }
+ofxMaxiFFT AudioAnalysis:: getFFT() const {
+    return fft;
+}
+
+maxiFFTOctaveAnalyzer AudioAnalysis::getOct() const {
+    return oct;
 }
 
 

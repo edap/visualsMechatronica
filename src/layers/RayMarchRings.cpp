@@ -30,6 +30,9 @@ void RayMarchRings::draw(){
 void RayMarchRings::setUniforms(){
     float resolution[] = {float(ofGetWidth()), float(ofGetHeight())};
     float time = ofGetElapsedTimef();
+
+    //$Context(AppTime)->elapsed * 0.8;
+
     rayMarching.setUniform1f("iGlobalTime",time);
     rayMarching.setUniform2fv("resolution",resolution);
     rayMarching.setUniformTexture("tex0",image0.getTexture(),0);

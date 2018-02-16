@@ -1,5 +1,6 @@
 #pragma once
 #include "ofxGlobalContext.h"
+
 class AppTime : public ofxGlobalContext::Context{
 public:
     AppTime();
@@ -8,5 +9,4 @@ public:
     float tick;
     float elapsed;
     float rate;
-
 };

@@ -8,7 +8,7 @@ Scene0::Scene0(const int arg0) {
 
 void Scene0::update(){
     LM.update();
-    cout << __PRETTY_FUNCTION__ << endl;
+    //cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void Scene0::draw(){
@@ -16,7 +16,7 @@ void Scene0::draw(){
 }
 
 void Scene0::viewWillAppear() {
-    cout << __PRETTY_FUNCTION__ << endl;
+    //cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void Scene0::viewDidAppear() {

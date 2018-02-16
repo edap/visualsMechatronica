@@ -2,14 +2,14 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-#include "../layers/RayMarchRings.h"
+#include "../layers/PlotOctave.h"
 
-class Scene0 : public ofxAnimationPrimitives::Scene{
+class DebugFFT : public ofxAnimationPrimitives::Scene{
 public:
 
-    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene0);
+    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(DebugFFT);
 
-    Scene0(const int arg0);
+    DebugFFT();
     void update();
     void draw();
     void viewWillAppear();
@@ -17,5 +17,5 @@ public:
     void viewWillDisappear();
     void viewDidDisappear();
 
-    ofxLayer::Manager LM;
+    ofxLayer::Manager LM1;
 };

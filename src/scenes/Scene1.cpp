@@ -1,6 +1,0 @@
-#include "Scene1.h"
-
-Scene1::Scene1()
-{
-
-}

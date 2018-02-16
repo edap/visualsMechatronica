@@ -34,6 +34,7 @@ private:
     // Methods
     void audioOut(float * output, int bufferSize, int nChannels);
     void setupAudio();
+    void switchScene(int key);
 
     // Animation Primitives
     ofxAnimationPrimitives::SceneManager SM;
@@ -48,6 +49,7 @@ private:
     double        wave;
     double        outputs[2];
     ofxMaxiFFT    fft;
+    maxiFFTOctaveAnalyzer oct;
     // end audio
 
     //graphics vars
