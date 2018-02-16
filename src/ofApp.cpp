@@ -125,25 +125,22 @@ void ofApp::setupAudio(){
     if (audioDisabled) { return; };
     sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
 
-    sampleRate 	= 44100; /* Sampling Rate */
-    bufferSize	= 512;
+    //oct.setup(44100, 1024, 10);
+    oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
 
     ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
-    // the higher the value, the more accurate will be the fft analysis
-    fftSize = 1024;
     fft.setup(fftSize, 512, 256);
 
-    oct.setup(sampleRate, 1024, 2); // setting the averages of samples to count to 2 make the selection
-    // of the octaves more simpler
-
+    oct.setup(sampleRate, 1024, 2);
     //oct.setup(sampleRate, 1024, 10);
-    /* this has to happen at the end of setup - it switches on the DAC */
-    // TODO, Change with stream options
+    // setting the averages of samples to count to 2 instead of 10
+    //make the selection of the octaves more simpler
+
     ofSoundStreamSetup(2,2,this, sampleRate, bufferSize, 4);
     //ofSetBackgroundColor(255, 200, 0);
 }
 
 void ofApp::init_context(){
     ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
-    ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(fft, fftSize, oct);
+    ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(oct);
 }

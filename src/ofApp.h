@@ -41,9 +41,9 @@ private:
 
     // Audio vars
     bool          audioDisabled = false;
-    int		      bufferSize;
-    int           sampleRate;
-    int           fftSize;
+    int		      bufferSize = 512;
+    int           sampleRate = 44100;
+    int           fftSize = 1024;
     ofxMaxiSample sample;
     maxiMix       mymix;
     double        wave;
