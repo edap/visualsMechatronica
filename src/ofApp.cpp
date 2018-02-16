@@ -6,30 +6,14 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     init_context();
     SM.addScene<Scene0>(42);
+    SM.changeScene("Scene0");
 
     finalFbo.allocate(1280, 720, GL_RGBA);
-    ofDisableArbTex();
-    plane.setResolution(2,2);
-    plane.setPosition(ofGetWidth()/2, ofGetHeight()/2, 0);
-    plane.set(ofGetWidth(), ofGetHeight());
-    light.enable();
-    image0.load("textures/eastern-rosella-big.jpg");
-    tex0 = image0.getTexture();
-
-#ifdef TARGET_OPENGLES
-    shader.load("shadersES2/shader");
-#else
-    if(ofIsGLProgrammableRenderer()){
-        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag", "");
-    }else{
-        rayMarching.load("shaders_gl3/passthruogh.vert", "shaders_gl3/march1.frag", "");
-    }
-#endif
 
     setupAudio();
 
     finalFbo.begin();
-    ofClear(255,255,255, 0);
+    ofClear(0, 0, 0, 0);
     finalFbo.end();
 }
 
@@ -37,19 +21,18 @@ void ofApp::setup(){
 void ofApp::update(){
     ofxGlobalContext::Manager::defaultManager().update();
 
-    finalFbo.begin();
-    tex0.bind();
-    rayMarching.begin();
-    setUniforms();
-    plane.draw();
-    rayMarching.end();
-    tex0.unbind();
-    finalFbo.end();
+    SM.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    finalFbo.draw(0,0);
+    finalFbo.begin();
+    ofClear(0, 0, 0, 255);
+    SM.draw();
+    finalFbo.end();
+
+    ofSetColor(255);
+    finalFbo.draw(0, 0);
 }
 
 void ofApp::setUniforms(){
