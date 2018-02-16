@@ -26,6 +26,8 @@ Project{
             "src/layers/PlotOctave.h",
             "src/layers/RayMarchRings.cpp",
             "src/layers/RayMarchRings.h",
+            "src/layers/templates/Shadertoy.cpp",
+            "src/layers/templates/Shadertoy.h",
             "src/scenes/DebugFFT.cpp",
             "src/scenes/DebugFFT.h",
             "src/scenes/Scene0.cpp",
