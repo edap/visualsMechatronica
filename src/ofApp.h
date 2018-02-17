@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxMaxim.h"
-#include "fftPlotter.h"
-#include "ofxAutoReloadedShader.h"
 #include "ofxAnimationPrimitives.h"
 //Context
 #include "ofxGlobalContext.h"
@@ -54,10 +52,6 @@ private:
 
     //graphics vars
     ofLight               light;
-    ofxAutoReloadedShader rayMarching;
-    ofImage               image0;
-    ofTexture             tex0;
-    ofPlanePrimitive      plane;
     ofFbo                 finalFbo;
     //end graphics
 };

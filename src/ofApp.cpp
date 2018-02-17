@@ -8,7 +8,8 @@ void ofApp::setup(){
 
     //Scenes
     init_context();
-    SM.addScene<Scene0>(42);
+    SM.addScene<Scene0>();
+    SM.addScene<Scene1>();
     SM.addScene<DebugFFT>();
     SM.changeScene("Scene0");
 
@@ -56,6 +57,7 @@ void ofApp::audioOut(float * output, int bufferSize, int nChannels){
 
 void ofApp::switchScene(int key){
     if(key == 'q') SM.changeScene<Scene0>(0.1);
+    if(key == 'w') SM.changeScene<Scene1>(0.1);
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
     //if(key == 2) SM.changeScene<Flying>(0.1);
     //if(key == 3) SM.changeScene<Scene3>(0.1);

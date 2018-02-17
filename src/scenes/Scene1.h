@@ -4,12 +4,12 @@
 #include "ofxLayer.h"
 #include "../layers/RayMarchRings.h"
 
-class Scene0 : public ofxAnimationPrimitives::Scene{
+class Scene1 : public ofxAnimationPrimitives::Scene{
 public:
 
-    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene0);
+    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene1);
 
-    Scene0();
+    Scene1();
     void update();
     void draw();
     void viewWillAppear();

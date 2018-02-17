@@ -14,18 +14,19 @@ Project{
         files: [
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",
             "src/Scenes.h",
             "src/context/AppTime.cpp",
             "src/context/AppTime.h",
             "src/context/AudioAnalysis.cpp",
             "src/context/AudioAnalysis.h",
-            "src/fftPlotter.cpp",
-            "src/fftPlotter.h",
             "src/layers/PlotOctave.cpp",
             "src/layers/PlotOctave.h",
             "src/layers/RayMarchRings.cpp",
             "src/layers/RayMarchRings.h",
+            "src/layers/RotatingSpheres.cpp",
+            "src/layers/RotatingSpheres.h",
             "src/layers/templates/SimpleFragment.cpp",
             "src/layers/templates/SimpleFragment.h",
             "src/scenes/DebugFFT.cpp",
@@ -35,6 +36,8 @@ Project{
             "src/main.cpp",
             "src/ofApp.cpp",
             "src/ofApp.h",
+            "src/scenes/Scene1.cpp",
+            "src/scenes/Scene1.h",
         ]
 
         of.addons: [
