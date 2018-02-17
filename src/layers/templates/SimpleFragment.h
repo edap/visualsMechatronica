@@ -4,18 +4,16 @@
 
 using namespace ofxLayer;
 
-class Shadertoy : public ofxLayer::Layer {
+class SimpleFragment : public ofxLayer::Layer {
 
 public:
-
     void setup();
     void draw();
-
-private:
-    void setUniforms();
+    virtual void loadAssets() = 0;
+    virtual void setUniforms() = 0;
 
     ofxAutoReloadedShader shader;
-    ofImage               image0;
-    ofTexture             tex0;
-    ofPlanePrimitive      plane;
+
+private:
+    bool checkGLVersion();
 };

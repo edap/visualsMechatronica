@@ -7,5 +7,3 @@ AudioAnalysis::AudioAnalysis(const maxiFFTOctaveAnalyzer& _oct){
 maxiFFTOctaveAnalyzer AudioAnalysis::getOct() const {
     return oct;
 }
-
-

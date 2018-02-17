@@ -1,13 +1,17 @@
 #pragma once
 #include "../Layer.h"
 #include "ofxAutoReloadedShader.h"
-#include "templates/Shadertoy.h"
+#include "templates/SimpleFragment.h"
 
 using namespace ofxLayer;
 
-class RayMarchRings : public Shadertoy {
+class RayMarchRings : public SimpleFragment {
 
 public:
     OFX_LAYER_DEFINE_LAYER_CLASS(RayMarchRings)
+    void setUniforms();
+    void loadAssets();
 
+private:
+    ofImage image0;
 };
