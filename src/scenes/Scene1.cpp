@@ -2,7 +2,7 @@
 
 Scene1::Scene1() {
     LM.setup(ofGetWidth(), ofGetHeight());
-    LM.createLayer<RayMarchRings>(0.3);
+    LM.createLayer<RotatingSpheres>(0.3);
 }
 
 void Scene1::update(){

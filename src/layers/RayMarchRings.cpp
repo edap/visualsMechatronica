@@ -15,3 +15,5 @@ void RayMarchRings::setUniforms(){
     shader.setUniform2fv("resolution",resolution);
     shader.setUniformTexture("tex0",image0.getTexture(),0);
 }
+
+

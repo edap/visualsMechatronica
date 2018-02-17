@@ -2,7 +2,7 @@
 
 void RotatingSpheres::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/two_spheres.frag", "");
-    image0.load("textures/eastern-rosella-big.jpg");
+    image0.load("textures/BlueFrontedParrot.jpg");
 }
 
 void RotatingSpheres::setUniforms(){

@@ -15,7 +15,7 @@ void ofApp::setup(){
     SM.changeScene("Scene0");
 
     //FBO
-    finalFbo.allocate(1280, 720, GL_RGBA);
+    finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     finalFbo.begin();
     ofClear(0, 0, 0, 0);
     finalFbo.end();
@@ -128,23 +128,18 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 void ofApp::setupAudio(){
     if (audioDisabled) { return; };
     sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
-
-    //oct.setup(44100, 1024, 10);
-    oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
-
     ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
     fft.setup(fftSize, 512, 256);
-
     oct.setup(sampleRate, 1024, 2);
     //oct.setup(sampleRate, 1024, 10);
     // setting the averages of samples to count to 2 instead of 10
     //make the selection of the octaves more simpler
 
     ofSoundStreamSetup(2,2,this, sampleRate, bufferSize, 4);
-    //ofSetBackgroundColor(255, 200, 0);
 }
 
 void ofApp::init_context(){
     ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
+    ofxGlobalContext::Manager::defaultManager().createContext<Panel>();
     ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(oct);
 }

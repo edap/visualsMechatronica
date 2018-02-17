@@ -1,7 +1,6 @@
 ## context
 In this folder there are the classes that are shared among the whole application. All the context inherits from `ofxGlobalContext`
 
-
 ## scenes
 
 This application is used to make visuals for an audio track. It is possible to make different scenes and to fade them in and out using ofxAnimationPrimitives.

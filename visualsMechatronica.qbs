@@ -22,6 +22,8 @@ Project{
             "src/context/AppTime.h",
             "src/context/AudioAnalysis.cpp",
             "src/context/AudioAnalysis.h",
+            "src/context/Panel.cpp",
+            "src/context/Panel.h",
             "src/layers/Multistructure.cpp",
             "src/layers/Multistructure.h",
             "src/layers/PlotOctave.cpp",

@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-#include "../layers/RayMarchRings.h"
+#include "../layers/RotatingSpheres.h"
 
 class Scene1 : public ofxAnimationPrimitives::Scene{
 public:

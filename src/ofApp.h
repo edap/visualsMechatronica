@@ -7,6 +7,7 @@
 #include "ofxGlobalContext.h"
 #include "context/AppTime.h"
 #include "context/AudioAnalysis.h"
+#include "context/Panel.h"
 
 class ofApp : public ofBaseApp{
 
