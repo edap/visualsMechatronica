@@ -14,6 +14,7 @@ Project{
         files: [
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/mercury_structure.frag",
             "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",
             "src/Scenes.h",
@@ -21,6 +22,8 @@ Project{
             "src/context/AppTime.h",
             "src/context/AudioAnalysis.cpp",
             "src/context/AudioAnalysis.h",
+            "src/layers/Multistructure.cpp",
+            "src/layers/Multistructure.h",
             "src/layers/PlotOctave.cpp",
             "src/layers/PlotOctave.h",
             "src/layers/RayMarchRings.cpp",
@@ -38,6 +41,8 @@ Project{
             "src/ofApp.h",
             "src/scenes/Scene1.cpp",
             "src/scenes/Scene1.h",
+            "src/scenes/Scene2.cpp",
+            "src/scenes/Scene2.h",
         ]
 
         of.addons: [

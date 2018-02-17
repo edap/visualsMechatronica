@@ -2,18 +2,16 @@
 #include "../Layer.h"
 #include "ofxAutoReloadedShader.h"
 #include "templates/SimpleFragment.h"
-#include "../context/AudioAnalysis.h"
 
 using namespace ofxLayer;
 
-class RotatingSpheres : public SimpleFragment {
+class Multistructure : public SimpleFragment {
 
 public:
-    OFX_LAYER_DEFINE_LAYER_CLASS(RotatingSpheres)
+    OFX_LAYER_DEFINE_LAYER_CLASS(Multistructure)
     void setUniforms();
     void loadAssets();
 
 private:
-    void setOctaves();
     ofImage image0;
 };
