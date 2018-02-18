@@ -52,7 +52,7 @@ private:
     // end audio
 
     //graphics vars
-    ofLight               light;
     ofFbo                 finalFbo;
+    bool                  drawGui;
     //end graphics
 };

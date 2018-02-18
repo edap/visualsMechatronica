@@ -8,6 +8,7 @@ void ofApp::setup(){
 
     //Scenes
     init_context();
+    $Context(Panel)->setup();
     SM.addScene<Scene0>();
     SM.addScene<Scene1>();
     SM.addScene<Scene2>();
@@ -38,6 +39,8 @@ void ofApp::draw(){
     // draw the FBO
     ofSetColor(255);
     finalFbo.draw(0, 0);
+
+    if (drawGui) $Context(Panel)->draw();
 }
 
 
@@ -61,6 +64,8 @@ void ofApp::switchScene(int key){
     if(key == 'w') SM.changeScene<Scene1>(0.1);
     if(key == 'e') SM.changeScene<Scene2>(0.1);
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
+
+    if(key == 'g') drawGui = !drawGui;
     //if(key == 2) SM.changeScene<Flying>(0.1);
     //if(key == 3) SM.changeScene<Scene3>(0.1);
     //if(key == 4) SM.changeScene<Scene4>(0.1);

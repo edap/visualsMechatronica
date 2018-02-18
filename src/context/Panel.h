@@ -6,7 +6,7 @@ class Panel : public ofxGlobalContext::Context{
 public:
     Panel();
     void setup();
-    void drawGui();
+    void draw();
 
     ofxFloatSlider displacement;
     //ofxColorSlider dominant_color;

@@ -112,7 +112,7 @@ float raymarching(vec3 eye, vec3 marchingDirection){
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     vec3 eye = vec3(0.0, 0.0, 3.);
-    float fov = -2.8;
+    float fov = -3.;
     vec3 dir = normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
