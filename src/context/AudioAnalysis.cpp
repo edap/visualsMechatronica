@@ -2,6 +2,7 @@
 
 AudioAnalysis::AudioAnalysis(const maxiFFTOctaveAnalyzer& _oct){
     oct = _oct;
+
     for(auto nBands : nFilteredBands){
         std::deque<float> deq {0.,5};
         mappedBands.insert(make_pair(nBands, deq));
@@ -22,35 +23,20 @@ void AudioAnalysis::changeBand(int val){
     }
 };
 
-void AudioAnalysis::update(){
-//    auto octAvgs = oct.averages;
-//    int historiesIndex = 0;
-//    for(auto nBands : nFilteredBands){
-//        smoothBand(octAvgs[nBands], historyBands[historiesIndex]);
-//        historiesIndex++;
-//    }
-
-}
-
 int AudioAnalysis::getBand(){
     return selectedBand;
 };
 
 float AudioAnalysis::smoothBand(int n_band){
-//    if (!mappedBands.count(n_band)){
-//        return 0.0;
-//        ofLogError("band"+ ofToString(n_band) +"not in vector nFilteredBands, add it if you need it");
-//    }
-
     auto octAvgs = oct.averages;
     auto o =  octAvgs[n_band];
-    return rectBoxcarFilter(o, &mappedBands[n_band]);
-    //return rectBoxcarFilter(o, &history);
+    if (!mappedBands.count(n_band)){
+        ofLogError("band "+ ofToString(n_band) + "not in vector nFilteredBands, add it if you need it");
+        return rectBoxcarFilter(o, &tmpHistory);
+    } else {
+       return rectBoxcarFilter(o, &mappedBands[n_band]);
+    }
 };
-
-//void AudioAnalysis::updateFilteredBands(){
-
-//}
 
 // this is a low band filter. I'm not sure how accurate it is, but it works for my needs.
 // references:
@@ -74,7 +60,7 @@ float AudioAnalysis::rectBoxcarFilter(const float val, std::deque<float>* _histo
         float sum = 0;
         float shape = -5; // values goes from -5 to +5, the curve described by this values
         // define the shape of the filter. It could also have been from 0 to 10
-        for(int i = 0; i< max_history; i++){
+        for (int i = 0; i< max_history; i++) {
             sum += _history->at(i) * (coef + shape);
             shape+=1;
         }

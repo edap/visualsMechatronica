@@ -7,31 +7,32 @@ class AudioAnalysis : public ofxGlobalContext::Context{
 public:
     AudioAnalysis(const maxiFFTOctaveAnalyzer& _oct);
     virtual ~AudioAnalysis() {}
-    void update();
     maxiFFTOctaveAnalyzer getOct() const;
     void changeBand(int n_band);
     int getBand();
     float smoothBand(int n_band);
 
-    // This is the number of values that it will averaged
-    int max_history = 11;//choose always a odd number.
-    float coef = 80;
-
-
-    // use this if you want to read the values of only one band for each scene
-    std::deque<float> history;
-
-    // use this if you want to read multiple bands values for each scene, for example
-    // you want to have a cirve that move according to the bass
-    // and a square for the high pitch sounds
-    vector<int> nFilteredBands = {2,6,7,8,9};
-    // this is used to find the index in the historyBands
-    map<int, std::deque<float>> mappedBands;
-    vector<std::deque<float>> historyBands;
 
 private:
-    int selectedBand = 0;
     maxiFFTOctaveAnalyzer oct;
+
+    // Filtering
+    // There are two kind of queue where to save the values to filter. The tmpHistory
+    // and the mappedBands hsitory. In the first one, the que is fullfilled
+    // for the given band and an average is calculated.
+    // The second one stores the values of multiple bands. This is useful when you need to
+    // read the values of multiple band in a single scene. for example
+    // you want to have a circle that moves according to the bass
+    // and a square that moves according to the high pitch sounds
+    std::deque<float> tmpHistory;
+    map<int, std::deque<float>> mappedBands;
+
+    vector<int> nFilteredBands = {1,6,7,8,9};
+    int selectedBand = 0;
+
+    // Rectangular Boxcar Filter
+    // This is the number of values the will be stored in the hisotry
+    int max_history = 11; //choose always a odd number.
+    float coef = 80;
     float rectBoxcarFilter(const float oct, std::deque<float>* _history);
-    float updateFilteredBands();
 };
