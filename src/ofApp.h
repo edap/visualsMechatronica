@@ -27,11 +27,11 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    void audioOut(ofSoundBuffer &buffer);
 
 private:
     void init_context();
     // Methods
-    void audioOut(ofSoundBuffer &buffer);
     void setupAudio();
     void switchScene(int key);
     void switchBand(int key);
@@ -41,14 +41,14 @@ private:
 
     // Audio vars
     bool          audioDisabled = false;
-    unsigned	  bufferSize = 512;
-    unsigned      sampleRate = 44100;
-    int           fftSize = 1024;
+    unsigned bufferSize, sampleRate, startTime, endTime, currentTime;
+    double frequency, currentSample;
+    double outputs[2];
+
+    maxiMix mix;
     ofxMaxiSample sample;
-    maxiMix       mix;
-    double        currentSample;
-    double        outputs[2];
-    ofxMaxiFFT    fft;
+
+    maxiFFT fft;
     maxiFFTOctaveAnalyzer oct;
     // end audio
 

@@ -7,7 +7,6 @@ void PlotOctave::draw(){
     auto octAvgs = oct.averages;
     auto octNavgs = oct.nAverages;
 
-
     for (int i = 0; i<octNavgs; i++) {
         ofColor col;
         col.setHsb((int)ofMap(i, 0, octNavgs, 0, 255), 255, 255);
@@ -18,6 +17,10 @@ void PlotOctave::draw(){
 
         ofDrawRectangle(x, ofGetHeight()/1.2, 10, -size);
         ofDrawBitmapString(i, x, ofGetHeight()/1.15);
+
+        if (i == $Context(AudioAnalysis)->getBand()) {
+            ofDrawRectangle(x,ofGetHeight()/1.22, 10,10,10);
+        }
     }
 
 

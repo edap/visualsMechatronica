@@ -8,8 +8,8 @@ void RotatingSpheres::loadAssets(){
 void RotatingSpheres::setUniforms(){
     float resolution[] = {float(ofGetWidth()), float(ofGetHeight())};
     float time = ofGetElapsedTimef();
-    float beat = $Context(AudioAnalysis)->getBandAvgs();
-
+    float beat = $Context(AudioAnalysis)->getBandAvgs() * $Context(Panel)->smooth;
+    cout << beat << endl;
     //$Context(AppTime)->elapsed * 0.8;
 
     shader.setUniform1f("iGlobalTime",time);

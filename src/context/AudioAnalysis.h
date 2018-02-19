@@ -11,8 +11,7 @@ public:
     int getBand();
     float getBandAvgs();
 
-    float smoother = 0.5;
-    float smoothedVolume = 80;
+    float coef = 80;
     float scaledVolume = 0;
     vector <float> volHistory;
 

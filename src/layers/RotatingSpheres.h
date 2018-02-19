@@ -3,6 +3,7 @@
 #include "ofxAutoReloadedShader.h"
 #include "templates/SimpleFragment.h"
 #include "../context/AudioAnalysis.h"
+#include "../context/Panel.h"
 
 using namespace ofxLayer;
 

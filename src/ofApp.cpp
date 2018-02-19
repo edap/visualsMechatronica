@@ -44,11 +44,10 @@ void ofApp::draw(){
 }
 
 
-
-
 void ofApp::audioOut(ofSoundBuffer &buffer){
     if (audioDisabled) { return; };
     for (unsigned i = 0 ; i< bufferSize; i++) {
+        //currentSample = (env.adsr(osc.sinewave(frequency + mod.sinewave(1)*440),env.trigger))/2;
         currentSample = sample.play();
         if (fft.process(currentSample)) {
             oct.calculate(fft.magnitudes);
@@ -57,8 +56,6 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
         buffer[i*buffer.getNumChannels()] = outputs[0];
         buffer[i*buffer.getNumChannels()+1] = outputs[1];
     }
-    cout << oct.averages[0]<< endl;
-    cout << oct.averages[17]<< endl;
 }
 
 
@@ -136,17 +133,19 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 void ofApp::setupAudio(){
     if (audioDisabled) { return; };
 
-    //fft.setup(fftSize, 512, 256);
-    //oct.setup(sampleRate, 1024, 2);
+    sampleRate = 44100;
+    bufferSize = 512;
+
     fft.setup(1024, 512, 256);
     //oct.setup(44100, 1024, 10);
-    oct.setup(44100, 1024, 2);
-    //oct.setup(sampleRate, 1024, 10);
-    // setting the averages of samples to count to 2 instead of 10
-    //make the selection of the octaves more simpler
+    oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
+
     sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
     ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
     ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 4);
+
+    startTime = ofGetElapsedTimeMillis();
+    endTime = 1000;
 }
 
 void ofApp::init_context(){

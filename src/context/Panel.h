@@ -1,3 +1,4 @@
+#pragma once
 #include "ofxGlobalContext.h"
 #include "ofxGui.h"
 
@@ -9,6 +10,7 @@ public:
     void draw();
 
     ofxFloatSlider displacement;
+    ofxFloatSlider smooth;
     //ofxColorSlider dominant_color;
     ofxPanel gui;
 };
