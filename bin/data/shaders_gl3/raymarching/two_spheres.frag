@@ -3,6 +3,7 @@
 uniform sampler2D tex0;
 uniform vec2 resolution;
 uniform float iGlobalTime;
+uniform float beat;
 
 in vec2 vTexCoord;
 out vec4 fragColor;
@@ -37,8 +38,8 @@ float map(vec3 pos){
 
     //float s = sdfSphere(pos, 0.5);
     float s = sdfSphere(pos, 0.7);
-    float pert = perturbedSphere(pos+vec3(-.48 * sin(iGlobalTime*0.2),0,0), 0.5, 1.);
-    float pert2 = perturbedSphere(pos+vec3(+.48 * sin(iGlobalTime*0.2),0,0), 0.5, -1.);
+    float pert = perturbedSphere(pos+vec3(-.48 * sin(iGlobalTime*0.2),0,0), beat, 1.);
+    float pert2 = perturbedSphere(pos+vec3(+.48 * sin(iGlobalTime*0.2),0,0), beat, -1.);
 
     //return max(smin(pert, pert2, 9.1), s);
     return smin(pert, pert2, 9.1);

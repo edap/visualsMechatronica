@@ -44,40 +44,43 @@ void ofApp::draw(){
 }
 
 
-//--------------------------------------------------------------
-void ofApp::audioOut(float * output, int bufferSize, int nChannels){
+
+
+void ofApp::audioOut(ofSoundBuffer &buffer){
     if (audioDisabled) { return; };
-    for (int i = 0; i < bufferSize; i++){
-        wave = sample.play();
-        //fft
-        if(fft.process(wave)){
+    for (unsigned i = 0 ; i< bufferSize; i++) {
+        currentSample = sample.play();
+        if (fft.process(currentSample)) {
             oct.calculate(fft.magnitudes);
         }
-        mymix.stereo(wave, outputs, 0.5);
-        output[i*nChannels    ] = outputs[0];
-        output[i*nChannels + 1] = outputs[1];
+        mix.stereo(currentSample, outputs, 0.5);
+        buffer[i*buffer.getNumChannels()] = outputs[0];
+        buffer[i*buffer.getNumChannels()+1] = outputs[1];
     }
+    cout << oct.averages[0]<< endl;
+    cout << oct.averages[17]<< endl;
+}
+
+
+void ofApp::switchBand(int key){
+    if(key == 3814) $Context(AudioAnalysis)->changeBand(1);
+    if(key == 3812) $Context(AudioAnalysis)->changeBand(-1);
 }
 
 void ofApp::switchScene(int key){
+
     if(key == 'q') SM.changeScene<Scene0>(0.1);
     if(key == 'w') SM.changeScene<Scene1>(0.1);
     if(key == 'e') SM.changeScene<Scene2>(0.1);
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
-
-    if(key == 'g') drawGui = !drawGui;
-    //if(key == 2) SM.changeScene<Flying>(0.1);
-    //if(key == 3) SM.changeScene<Scene3>(0.1);
-    //if(key == 4) SM.changeScene<Scene4>(0.1);
-    //if(key == 5) SM.changeScene<Scene5>(0.1);
-    //if(key == 6) SM.changeScene<Theta>(0.1);
-    //if (key == 7) SM.changeScene<Universe>(0.1);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     cout << key << endl;
     switchScene(key);
+    switchBand(key);
+    if(key == 'g') drawGui = !drawGui;
 }
 
 //--------------------------------------------------------------
@@ -132,15 +135,18 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::setupAudio(){
     if (audioDisabled) { return; };
-    sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
-    ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
-    fft.setup(fftSize, 512, 256);
-    oct.setup(sampleRate, 1024, 2);
+
+    //fft.setup(fftSize, 512, 256);
+    //oct.setup(sampleRate, 1024, 2);
+    fft.setup(1024, 512, 256);
+    //oct.setup(44100, 1024, 10);
+    oct.setup(44100, 1024, 2);
     //oct.setup(sampleRate, 1024, 10);
     // setting the averages of samples to count to 2 instead of 10
     //make the selection of the octaves more simpler
-
-    ofSoundStreamSetup(2,2,this, sampleRate, bufferSize, 4);
+    sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
+    ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
+    ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 4);
 }
 
 void ofApp::init_context(){

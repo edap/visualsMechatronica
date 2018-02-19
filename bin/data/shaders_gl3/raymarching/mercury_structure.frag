@@ -1,4 +1,5 @@
 #version 150
+#pragma include "../libs/mercury.glsl"
 
 uniform sampler2D tex0;
 uniform vec2 resolution;

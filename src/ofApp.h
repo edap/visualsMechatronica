@@ -31,21 +31,22 @@ public:
 private:
     void init_context();
     // Methods
-    void audioOut(float * output, int bufferSize, int nChannels);
+    void audioOut(ofSoundBuffer &buffer);
     void setupAudio();
     void switchScene(int key);
+    void switchBand(int key);
 
     // Animation Primitives
     ofxAnimationPrimitives::SceneManager SM;
 
     // Audio vars
     bool          audioDisabled = false;
-    int		      bufferSize = 512;
-    int           sampleRate = 44100;
+    unsigned	  bufferSize = 512;
+    unsigned      sampleRate = 44100;
     int           fftSize = 1024;
     ofxMaxiSample sample;
-    maxiMix       mymix;
-    double        wave;
+    maxiMix       mix;
+    double        currentSample;
     double        outputs[2];
     ofxMaxiFFT    fft;
     maxiFFTOctaveAnalyzer oct;
