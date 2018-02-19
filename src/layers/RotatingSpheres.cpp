@@ -6,17 +6,18 @@ void RotatingSpheres::loadAssets(){
 }
 
 void RotatingSpheres::setUniforms(){
-    float resolution[] = {float(ofGetWidth()), float(ofGetHeight())};
+    float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
-    float beat = $Context(AudioAnalysis)->getBandAvgs() * $Context(Panel)->smooth;
-    cout << beat << endl;
-    //$Context(AppTime)->elapsed * 0.8;
+    int n_band = $Context(AudioAnalysis)->getBand();
+    float beat = $Context(AudioAnalysis)->smoothBand(n_band) * $Context(Panel)->audioMag;
 
-    shader.setUniform1f("iGlobalTime",time);
-    shader.setUniform1f("beat",beat);
-    //cout << beat << endl;
-    shader.setUniform2fv("resolution",resolution);
-    shader.setUniformTexture("tex0",image0.getTexture(),0);
+//    float b = $Context(AudioAnalysis)->smoothBand(6) * $Context(Panel)->audioMag;
+//    cout << b << endl;
+
+    shader.setUniform1f("iGlobalTime", time);
+    shader.setUniform1f("beat", beat);
+    shader.setUniform2fv("resolution", resolution);
+    shader.setUniformTexture("tex0", image0.getTexture(), 0);
 
     setOctaves();
 }

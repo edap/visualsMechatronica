@@ -19,7 +19,7 @@ void PlotOctave::draw(){
         ofDrawBitmapString(i, x, ofGetHeight()/1.15);
 
         if (i == $Context(AudioAnalysis)->getBand()) {
-            ofDrawRectangle(x,ofGetHeight()/1.22, 10,10,10);
+            ofDrawRectangle(x,ofGetHeight()/1.4, 10,10,10);
         }
     }
 

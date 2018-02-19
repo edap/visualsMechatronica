@@ -9,8 +9,8 @@ public:
     void setup();
     void draw();
 
-    ofxFloatSlider displacement;
-    ofxFloatSlider smooth;
+    ofxFloatSlider audioSmooth; // this value has always to be bigger than 0
+    ofxFloatSlider audioMag;
     //ofxColorSlider dominant_color;
     ofxPanel gui;
 };
