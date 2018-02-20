@@ -12,16 +12,15 @@ public:
     int getBand();
     float smoothBand(int n_band);
 
-
 private:
     maxiFFTOctaveAnalyzer oct;
 
-    // Filtering
+    // Low band filtering
     // There are two kind of queue where to save the values to filter. The tmpHistory
     // and the mappedBands hsitory. In the first one, the que is fullfilled
     // for the given band and an average is calculated.
     // The second one stores the values of multiple bands. This is useful when you need to
-    // read the values of multiple band in a single scene. for example
+    // read the values of multiple bands in a single scene. For example
     // you want to have a circle that moves according to the bass
     // and a square that moves according to the high pitch sounds
     std::deque<float> tmpHistory;

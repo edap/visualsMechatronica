@@ -2,6 +2,8 @@
 #include "../Layer.h"
 #include "ofxAutoReloadedShader.h"
 #include "templates/SimpleFragment.h"
+#include "../context/AudioAnalysis.h"
+#include "../context/Panel.h"
 
 using namespace ofxLayer;
 
@@ -14,4 +16,10 @@ public:
 
 private:
     ofImage image0;
+    ofImage image1;
+    ofImage image2;
+    ofImage image3;
+    ofImage image4;
+    ofImage image5;
+    ofImage image6;
 };

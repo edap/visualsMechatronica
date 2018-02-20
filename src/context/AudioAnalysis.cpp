@@ -4,7 +4,7 @@ AudioAnalysis::AudioAnalysis(const maxiFFTOctaveAnalyzer& _oct){
     oct = _oct;
 
     for(auto nBands : nFilteredBands){
-        std::deque<float> deq {0.,5};
+        std::deque<float> deq {0.,11};
         mappedBands.insert(make_pair(nBands, deq));
     }
 }
@@ -31,7 +31,7 @@ float AudioAnalysis::smoothBand(int n_band){
     auto octAvgs = oct.averages;
     auto o =  octAvgs[n_band];
     if (!mappedBands.count(n_band)){
-        ofLogError("band "+ ofToString(n_band) + "not in vector nFilteredBands, add it if you need it");
+        //ofLogError("band "+ ofToString(n_band) + "not in vector nFilteredBands, add it if you need it");
         return rectBoxcarFilter(o, &tmpHistory);
     } else {
        return rectBoxcarFilter(o, &mappedBands[n_band]);

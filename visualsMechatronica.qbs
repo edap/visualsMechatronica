@@ -15,6 +15,7 @@ Project{
             "bin/data/shaders_gl3/libs/mercury.glsl",
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/blobby.glsl",
             "bin/data/shaders_gl3/raymarching/mercury_structure.frag",
             "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",
@@ -25,6 +26,8 @@ Project{
             "src/context/AudioAnalysis.h",
             "src/context/Panel.cpp",
             "src/context/Panel.h",
+            "src/layers/Blobby.cpp",
+            "src/layers/Blobby.h",
             "src/layers/Multistructure.cpp",
             "src/layers/Multistructure.h",
             "src/layers/PlotOctave.cpp",
@@ -46,6 +49,8 @@ Project{
             "src/scenes/Scene1.h",
             "src/scenes/Scene2.cpp",
             "src/scenes/Scene2.h",
+            "src/scenes/Scene3.cpp",
+            "src/scenes/Scene3.h",
         ]
 
         of.addons: [

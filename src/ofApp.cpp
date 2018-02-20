@@ -12,6 +12,7 @@ void ofApp::setup(){
     SM.addScene<Scene0>();
     SM.addScene<Scene1>();
     SM.addScene<Scene2>();
+    SM.addScene<Scene3>();
     SM.addScene<DebugFFT>();
     SM.changeScene("Scene0");
 
@@ -69,6 +70,7 @@ void ofApp::switchScene(int key){
     if(key == 'q') SM.changeScene<Scene0>(0.1);
     if(key == 'w') SM.changeScene<Scene1>(0.1);
     if(key == 'e') SM.changeScene<Scene2>(0.1);
+    if(key == 'r') SM.changeScene<Scene3>(0.1);
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
 }
 

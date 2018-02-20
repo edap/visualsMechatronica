@@ -13,6 +13,7 @@ public:
     virtual void setUniforms() = 0;
 
     ofxAutoReloadedShader shader;
+    //ofShader shader;
 
 private:
     bool checkGLVersion();

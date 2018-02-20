@@ -15,6 +15,5 @@ public:
     void loadAssets();
 
 private:
-    void setOctaves();
     ofImage image0;
 };
