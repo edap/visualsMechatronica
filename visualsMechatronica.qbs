@@ -15,7 +15,7 @@ Project{
             "bin/data/shaders_gl3/libs/mercury.glsl",
             "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
-            "bin/data/shaders_gl3/raymarching/blobby.glsl",
+            "bin/data/shaders_gl3/raymarching/blobby.frag",
             "bin/data/shaders_gl3/raymarching/mercury_structure.frag",
             "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",

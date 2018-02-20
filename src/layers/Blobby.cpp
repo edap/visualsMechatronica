@@ -1,7 +1,5 @@
 #include "Blobby.h"
 
-#include "Blobby.h"
-
 void Blobby::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blobby.frag", "");
     image0.load("textures/eastern-rosella-big.jpg");

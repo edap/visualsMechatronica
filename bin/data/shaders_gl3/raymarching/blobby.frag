@@ -844,6 +844,7 @@ uniform sampler2D tex6;
 
 uniform vec2 resolution;
 uniform float iGlobalTime;
+uniform float beat;
 
 in vec2 vTexCoord;
 out vec4 fragColor;
@@ -869,24 +870,6 @@ float smin( float a, float b, float k ){
 
 float smins( float a, float b ){
     return smin(a, b, 3.0);
-}
-
-float sdfSphere(vec3 pos, float radius){
-    return length(pos) - radius;
-}
-
-float sdTorus( vec3 p, vec2 t ){
-    vec2 q = vec2(length(p.xz)-t.x,p.y);
-    return length(q)-t.y;
-}
-
-float bendTorus( vec3 p, vec2 dim ){
-    float wave = sin(iGlobalTime * 0.2) * 2.2;
-    float c = cos(wave*p.y);
-    float s = sin(wave*p.y);
-    mat2  m = mat2(c,-s,s,c);
-    vec3  q = vec3(m*p.xy,p.z);
-    return sdTorus(q, dim);
 }
 
 float map(vec3 pos){
@@ -945,21 +928,6 @@ float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
     return clamp( res, 0.0, 1.0 );
 }
 
-
-float ao( in vec3 pos, in vec3 nor ){
-    float occ = 0.0;
-    float sca = 1.0;
-    for( int i=0; i<5; i++ )
-    {
-        float hr = 0.01 + 0.06*float(i)/4.0;
-        vec3 aopos =  nor * hr + pos;
-        float dd = map( aopos );
-        occ += -(dd-hr)*sca;
-        sca *= 0.95;
-    }
-    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 );
-}
-
 vec3 computeNormal(vec3 pos){
     vec2 eps = vec2(0.01, 0.);
     return normalize(vec3(
@@ -967,21 +935,6 @@ vec3 computeNormal(vec3 pos){
                           map(pos + eps.yxy) - map(pos - eps.yxy),
                           map(pos + eps.yyx) - map(pos - eps.yyx)
                           ));
-}
-
-float diffuse(vec3 normal){
-    float ambient = 0.7;
-    return clamp( dot(normal, lightDirection) * ambient + ambient, 0.0, 1.0 );
-}
-
-float specular(vec3 normal, vec3 dir){
-    vec3 h = normalize(normal - dir);
-    float specularityCoef = 100.;
-    return clamp( pow(max(dot(h, normal), 0.), specularityCoef), 0.0, 1.0);
-}
-
-float fresnel(vec3 normal, vec3 dir){
-    return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 2.0 );
 }
 
 vec3 getRefTexture(vec3 normal, vec3 dir) {
@@ -994,8 +947,9 @@ vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
     vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
     vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
-    return color0.xyz;
+    return color6.xyz;
 }
+
 
 vec3 calculateColor2(vec3 pos, vec3 dir){
   //light via https://vimeo.com/124721382
@@ -1008,7 +962,7 @@ vec3 calculateColor2(vec3 pos, vec3 dir){
   NV =  pow(1.-NV, 3.);
 
   float bli =  max(dot(normalize(lig+-dir), nor), 0.);
-  bli = pow(bli, 80.);
+  bli = pow(bli, 80. - beat*40);
 
   float c = NL + NV * 0.5 + bli;
   return vec3(c) * getRefTexture(nor, dir);
@@ -1028,7 +982,7 @@ void main(){
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 11.6;
+    float fov = 12.3;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
