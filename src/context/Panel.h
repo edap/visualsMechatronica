@@ -9,9 +9,17 @@ public:
     void setup();
     void draw();
 
+    ofxPanel gui;
+
     ofxFloatSlider audioSmooth; // this value has always to be bigger than 0
     ofxFloatSlider audioMag;
-    //ofxColorSlider dominant_color;
-    ofxPanel gui;
+
+    //prototyping vals
+    ofxFloatSlider sdf1;
+    ofxFloatSlider sdf2;
+    ofxIntSlider sdfOp;
+    ofxIntSlider sdfSolidId1;
+    ofxIntSlider sdfSolidId2;
+    ofxVec3Slider sdfSolid2Pos;
 };
 

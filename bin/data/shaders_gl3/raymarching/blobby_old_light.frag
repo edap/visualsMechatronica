@@ -1,6 +1,141 @@
 #version 150
 //#pragma include "../libs/mercury.glsl"
 
+////////////////////////////////////////////////////////////////
+//
+//                           HG_SDF
+//
+//     GLSL LIBRARY FOR BUILDING SIGNED DISTANCE BOUNDS
+//
+//     version 2016-01-10
+//
+//     Check http://mercury.sexy/hg_sdf for updates
+//     and usage examples. Send feedback to spheretracing@mercury.sexy.
+//
+//     Brought to you by MERCURY http://mercury.sexy
+//
+//
+//
+// Released as Creative Commons Attribution-NonCommercial (CC BY-NC)
+//
+////////////////////////////////////////////////////////////////
+//
+// How to use this:
+//
+// 1. Build some system to #include glsl files in each other.
+//   Include this one at the very start. Or just paste everywhere.
+// 2. Build a sphere tracer. See those papers:
+//   * "Sphere Tracing" http://graphics.cs.illinois.edu/sites/default/files/zeno.pdf
+//   * "Enhanced Sphere Tracing" http://lgdv.cs.fau.de/get/2234
+//   The Raymnarching Toolbox Thread on pouet can be helpful as well
+//   http://www.pouet.net/topic.php?which=7931&page=1
+//   and contains links to many more resources.
+// 3. Use the tools in this library to build your distance bound f().
+// 4. ???
+// 5. Win a compo.
+//
+// (6. Buy us a beer or a good vodka or something, if you like.)
+//
+////////////////////////////////////////////////////////////////
+//
+// Table of Contents:
+//
+// * Helper functions and macros
+// * Collection of some primitive objects
+// * Domain Manipulation operators
+// * Object combination operators
+//
+////////////////////////////////////////////////////////////////
+//
+// Why use this?
+//
+// The point of this lib is that everything is structured according
+// to patterns that we ended up using when building geometry.
+// It makes it more easy to write code that is reusable and that somebody
+// else can actually understand. Especially code on Shadertoy (which seems
+// to be what everybody else is looking at for "inspiration") tends to be
+// really ugly. So we were forced to do something about the situation and
+// release this lib ;)
+//
+// Everything in here can probably be done in some better way.
+// Please experiment. We'd love some feedback, especially if you
+// use it in a scene production.
+//
+// The main patterns for building geometry this way are:
+// * Stay Lipschitz continuous. That means: don't have any distance
+//   gradient larger than 1. Try to be as close to 1 as possible -
+//   Distances are euclidean distances, don't fudge around.
+//   Underestimating distances will happen. That's why calling
+//   it a "distance bound" is more correct. Don't ever multiply
+//   distances by some value to "fix" a Lipschitz continuity
+//   violation. The invariant is: each fSomething() function returns
+//   a correct distance bound.
+// * Use very few primitives and combine them as building blocks
+//   using combine opertors that preserve the invariant.
+// * Multiply objects by repeating the domain (space).
+//   If you are using a loop inside your distance function, you are
+//   probably doing it wrong (or you are building boring fractals).
+// * At right-angle intersections between objects, build a new local
+//   coordinate system from the two distances to combine them in
+//   interesting ways.
+// * As usual, there are always times when it is best to not follow
+//   specific patterns.
+//
+////////////////////////////////////////////////////////////////
+//
+// FAQ
+//
+// Q: Why is there no sphere tracing code in this lib?
+// A: Because our system is way too complex and always changing.
+//    This is the constant part. Also we'd like everyone to
+//    explore for themselves.
+//
+// Q: This does not work when I paste it into Shadertoy!!!!
+// A: Yes. It is GLSL, not GLSL ES. We like real OpenGL
+//    because it has way more features and is more likely
+//    to work compared to browser-based WebGL. We recommend
+//    you consider using OpenGL for your productions. Most
+//    of this can be ported easily though.
+//
+// Q: How do I material?
+// A: We recommend something like this:
+//    Write a material ID, the distance and the local coordinate
+//    p into some global variables whenever an object's distance is
+//    smaller than the stored distance. Then, at the end, evaluate
+//    the material to get color, roughness, etc., and do the shading.
+//
+// Q: I found an error. Or I made some function that would fit in
+//    in this lib. Or I have some suggestion.
+// A: Awesome! Drop us a mail at spheretracing@mercury.sexy.
+//
+// Q: Why is this not on github?
+// A: Because we were too lazy. If we get bugged about it enough,
+//    we'll do it.
+//
+// Q: Your license sucks for me.
+// A: Oh. What should we change it to?
+//
+// Q: I have trouble understanding what is going on with my distances.
+// A: Some visualization of the distance field helps. Try drawing a
+//    plane that you can sweep through your scene with some color
+//    representation of the distance field at each point and/or iso
+//    lines at regular intervals. Visualizing the length of the
+//    gradient (or better: how much it deviates from being equal to 1)
+//    is immensely helpful for understanding which parts of the
+//    distance field are broken.
+//
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+//
+//             HELPER FUNCTIONS/MACROS
+//
+////////////////////////////////////////////////////////////////
 
 #define PI 3.14159265
 #define TAU (2*PI)
@@ -674,6 +809,31 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 uniform sampler2D tex2;
@@ -684,12 +844,6 @@ uniform sampler2D tex6;
 
 uniform vec2 resolution;
 uniform float iGlobalTime;
-uniform float sdf1;
-uniform float sdf2;
-uniform int sdfOp;
-uniform int sdfSolidId1;
-uniform int sdfSolidId2;
-uniform vec3 solid2Pos;
 
 in vec2 vTexCoord;
 out vec4 fragColor;
@@ -698,71 +852,6 @@ const int MAX_MARCHING_STEPS = 64;
 const float EPSILON = 0.0011;
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
-
-float getSolid(vec3 p, int solidId, float size){
-    float d;
-    float sdfR = size;
-    float sdrSmallR = 0.3;
-    float height = 0.8;
-    float c = 1.2;
-    switch (int(solidId)) {
-            case 0: d = fBox(p,vec3(size)); break;
-            case 1: d = fSphere(p, size); break;
-            case 2: d = fBlob(p); break;
-            case 3: d = fCylinder(p, sdfR, height); break;
-            case 4: d = fCapsule(p, sdfR, c); break;
-            case 5: d = fTorus(p, sdrSmallR, sdfR); break;
-            case 6: d = fHexagonCircumcircle(p, vec2(height,height)); break;
-            case 7: d = fHexagonIncircle(p, vec2(height,height)); break;
-            case 8: d = fBox(p,vec3(1)); break;
-            case 9: d = fCone(p, sdrSmallR, height); break;
-            case 10: d = fOctahedron(p,  sdfR, c); break;
-            case 11: d = fDodecahedron( p,  sdfR, c); break;
-            case 12: d = fIcosahedron( p,  sdfR, c); break;
-            case 13: d = fTruncatedOctahedron( p,  sdfR, c); break;
-            case 14: d = fTruncatedIcosahedron( p,  sdfR, c); break;
-            case 15: d = fOctahedron( p,  sdfR); break;
-            case 16: d = fDodecahedron( p,  sdfR); break;
-            case 17: d = fIcosahedron( p,  sdfR); break;
-            case 18: d = fTruncatedOctahedron( p,  sdfR); break;
-            case 19: d = fTruncatedIcosahedron( p,  sdfR); break;
-    }
-    return d;
-}
-
-float fBoolOps(vec3 p) {
-        float box = getSolid(p, sdfSolidId1, sdf1);
-        float sphere = getSolid(p+solid2Pos, sdfSolidId2, sdf2);
-        float d;
-        float r = 0.8;
-        float n = 4;
-
-        switch (int(sdfOp)) {
-                case 0: d = min(box,sphere); break;
-                case 1: d = max(box,sphere); break;
-                case 2: d = max(box,-sphere); break;
-                case 3: d = fOpUnionRound(box,sphere,r); break;
-                case 4: d = fOpIntersectionRound(box,sphere,r); break;
-                case 5: d = fOpDifferenceRound(box,sphere,r); break;
-                case 6: d = fOpUnionChamfer(box,sphere,r); break;
-                case 7: d = fOpIntersectionChamfer(box,sphere,r); break;
-                case 8: d = fOpDifferenceChamfer(box,sphere,r); break;
-                case 9 : d = fOpUnionColumns(box,sphere,r,n); break;
-                case 10: d = fOpIntersectionColumns(box,sphere,r,n); break;
-                case 11: d = fOpDifferenceColumns(box,sphere,r,n); break;
-                case 12: d = fOpUnionStairs(box,sphere,r,n); break;
-                case 13: d = fOpIntersectionStairs(box,sphere,r,n); break;
-                case 14: d = fOpDifferenceStairs(box,sphere,r,n); break;
-                case 15: d = fOpPipe(box,sphere,r*0.3); break;
-                case 16: d = fOpEngrave(box,sphere,r*0.3); break;
-                case 17: d = fOpGroove(box,sphere,r*0.3, r*0.3); break;
-                case 18: d = fOpTongue(box,sphere,r*0.3, r*0.3); break;
-                // The implementation of the next one is left as an exercise to the reader:
-                //case 19: d = fOpFuckingBaroquePictureFrame(box,sphere,r); break;
-        }
-        return d;
-}
-
 
 vec3 lightDirection = normalize(vec3(1.0, 0.6, 1.));
 
@@ -801,24 +890,24 @@ float bendTorus( vec3 p, vec2 dim ){
 }
 
 float map(vec3 pos){
-    float freqOnYZ = .8;
+    float freqOnYZ = .1;
     float freqOnXZ = .4;
 
     pos.y += 1.0;
     pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
     pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
 
-    return fBoolOps(pos);
+    //pModPolar(pos.yz, PI * (sin(iGlobalTime) * 0.3) * 4.0);
+    //pMod2(pos.xy, vec2(6., 6.));
 
-    //return fHexagonIncircle(pos, vec2(1.2,1.2));
-    //return fBlob(pos);
-    //return fHexagonCircumcircle(pos, vec2(1.2,1.2));
-    //return fTruncatedOctahedron(pos, 1.3);
 
-    //float box0 = fBox(pos, vec3(1));
-    //float box1 = fBox(pos-vec3(1), vec3(1));
-    //return fOpUnionChamfer(box0, box1, 0.2);
-
+    return fBlob(pos);
+//    float sRadius = 3.5;
+//    float s3 = bendTorus(pos - s3pos,vec2(sRadius+0.5, 0.5));
+//    float s4 = bendTorus(pos - s4pos,vec2(sRadius-1.2, 0.5));
+//    float s5 = bendTorus(pos - s5pos,vec2(sRadius-1., 0.5));
+//    float s6 = bendTorus(pos,vec2(sRadius-1., 0.5));
+//    return smins(s5, smins(s4, smins(s3, s6)));
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -898,7 +987,6 @@ float fresnel(vec3 normal, vec3 dir){
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    //tex1.y+= fract(iGlobalTime);
     vec4 color0 = texture(tex0, (0.5 * (r.xy) + .5));
     vec4 color1 = texture(tex1, (0.5 * (r.xy) + .5));
     vec4 color2 = texture(tex2, (0.5 * (r.xy) + .5));
@@ -906,8 +994,7 @@ vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
     vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
     vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
-
-    return color1.xyz;
+    return color6.xyz;
 }
 
 vec3 calculateColor(vec3 pos, vec3 dir){
@@ -937,14 +1024,13 @@ void main(){
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 13.0;
+    float fov = 12.3;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    //vec3 bgColor = vec3(0.1, 0.35, 0.75);
-    vec3 bgColor = vec3(0.0, 0.0, 0.0);
+    vec3 bgColor = vec3(0.1, 0.35, 0.75);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );

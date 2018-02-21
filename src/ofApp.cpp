@@ -4,11 +4,14 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetVerticalSync(true);
+    // Audio, play the track and initialize audio analysis
     setupAudio();
 
-    //Scenes
+    // Contexts. This is where the state is saved
     init_context();
     $Context(Panel)->setup();
+
+    //Scenes
     SM.addScene<Scene0>();
     SM.addScene<Scene1>();
     SM.addScene<Scene2>();
@@ -76,7 +79,6 @@ void ofApp::switchScene(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    cout << key << endl;
     switchScene(key);
     switchBand(key);
     if(key == 'g') drawGui = !drawGui;
