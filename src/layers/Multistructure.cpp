@@ -4,10 +4,10 @@ void Multistructure::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/mercury_structure.frag", "");
     image0.load("textures/eastern-rosella-big.jpg");
     image1.load("textures/1.jpg");
-    image2.load("textures/3.jpg");
+    image2.load("textures/2a.jpg");
     image3.load("textures/4.jpg");
-    image4.load("textures/5.jpg");
-    image5.load("textures/6.jpg");
+    image4.load("textures/5a.jpg");
+    image5.load("textures/9c.jpeg");
     image6.load("textures/9a.jpg");
 }
 
@@ -25,6 +25,8 @@ void Multistructure::setUniforms(){
     glm::vec3 solid2Pos = $Context(Panel)->sdfSolid2Pos;
     //float b = $Context(AudioAnalysis)->smoothBand(6) * $Context(Panel)->audioMag;
     //cout << b << endl;
+    float sdfOpRadius = $Context(Panel)->sdfOpRadius;
+    float sdfOpStairs = $Context(Panel)->sdfOpStairs;
 
     shader.setUniform1f("iGlobalTime", time);
     shader.setUniform1f("beat", beat);
@@ -32,6 +34,8 @@ void Multistructure::setUniforms(){
     shader.setUniform1f("sdf1", sdf1);
     shader.setUniform1f("sdf2", sdf2);
     shader.setUniform1i("sdfOp", sdfOp);
+    shader.setUniform1f("sdfOpRadius", sdfOpRadius);
+    shader.setUniform1f("sdfOpStairs", sdfOpStairs);
     shader.setUniform1i("sdfSolidId1", sdfSolidId1);
     shader.setUniform1i("sdfSolidId2", sdfSolidId2);
     shader.setUniform3f("solid2Pos", solid2Pos);

@@ -810,7 +810,7 @@ float map(vec3 pos){
     pos.y += 1.0;
     pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
     pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
-    //pMod3(pos, vec3(10.));
+
     return fBoolOps(pos, sdfOpRadius, sdfOpStairs);
 
     //return fHexagonIncircle(pos, vec2(1.2,1.2));
@@ -910,7 +910,7 @@ vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
     vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
 
-    return color4.xyz;
+    return color2.xyz;
 }
 
 vec3 calculateColor(vec3 pos, vec3 dir){
@@ -961,9 +961,5 @@ void main(){
     } else {
         color = bgColor;
     }
-
-    //
-    //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
     fragColor = vec4(color , 1.0);
-    //fragColor = vec4(vec3(1.,0.,0.), 1.);
 }

@@ -14,10 +14,12 @@ public:
     ofxFloatSlider audioSmooth; // this value has always to be bigger than 0
     ofxFloatSlider audioMag;
 
-    //prototyping vals
+    //prototyping vars
     ofxFloatSlider sdf1;
     ofxFloatSlider sdf2;
     ofxIntSlider sdfOp;
+    ofxFloatSlider  sdfOpRadius;
+    ofxFloatSlider sdfOpStairs;
     ofxIntSlider sdfSolidId1;
     ofxIntSlider sdfSolidId2;
     ofxVec3Slider sdfSolid2Pos;
