@@ -760,8 +760,6 @@ float fBoolOps(vec3 p, float r, float n) {
                 case 16: d = fOpEngrave(box,sphere,r*0.3); break;
                 case 17: d = fOpGroove(box,sphere,r*0.3, r*0.3); break;
                 case 18: d = fOpTongue(box,sphere,r*0., r*0.3); break;
-                // The implementation of the next one is left as an exercise to the reader:
-                //case 19: d = fOpFuckingBaroquePictureFrame(box,sphere,r); break;
         }
         return d;
 }

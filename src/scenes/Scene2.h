@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-#include "../layers/Multistructure.h"
+#include "../layers/PlaygroundMercury.h"
 
 class Scene2 : public ofxAnimationPrimitives::Scene{
 public:

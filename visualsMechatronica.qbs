@@ -32,6 +32,8 @@ Project{
             "src/layers/Blobby.h",
             "src/layers/Multistructure.cpp",
             "src/layers/Multistructure.h",
+            "src/layers/PlaygroundMercury.cpp",
+            "src/layers/PlaygroundMercury.h",
             "src/layers/PlotOctave.cpp",
             "src/layers/PlotOctave.h",
             "src/layers/RayMarchRings.cpp",
