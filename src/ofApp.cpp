@@ -13,7 +13,7 @@ void ofApp::setup(){
 
     //Scenes
     SM.addScene<Scene0>();
-    SM.addScene<Scene1>("budgeridgar");
+    SM.addScene<Scene1>();
     SM.addScene<Scene2>();
     SM.addScene<Scene3>();
     SM.addScene<Scene4>();

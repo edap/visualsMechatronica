@@ -9,7 +9,7 @@ public:
 
     OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE();
 
-    Scene1(const string& bird);
+    Scene1();
     void update();
     void draw();
     void viewWillAppear();

@@ -10,7 +10,7 @@ public:
 
     OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene5);
 
-    Scene5);
+    Scene5();
     void update();
     void draw();
     void viewWillAppear();

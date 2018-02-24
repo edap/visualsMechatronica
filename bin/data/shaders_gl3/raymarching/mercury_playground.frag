@@ -701,6 +701,7 @@ const float EPSILON = 0.0011;
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
 
+
 float getSolid(vec3 p, int solidId, float size){
     float d;
     float sdfR = size;

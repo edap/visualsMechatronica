@@ -26,6 +26,6 @@ void Scene5::viewWillDisappear() {
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-void Scene5:viewDidDisappear() {
+void Scene5::viewDidDisappear() {
     cout << __PRETTY_FUNCTION__ << endl;
 }
