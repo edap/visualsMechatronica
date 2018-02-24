@@ -12,7 +12,7 @@ void Blobby::loadAssets(){
 }
 
 void Blobby::setUniforms(){
-    float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
+    float resolution[] = { float(ofGetScreenWidth()), float(ofGetScreenHeight()) };
     float time = ofGetElapsedTimef();
     int n_band = $Context(AudioAnalysis)->getBand();
     float beat = $Context(AudioAnalysis)->smoothBand(n_band) * $Context(Panel)->audioMag;

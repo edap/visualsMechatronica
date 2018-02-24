@@ -81,7 +81,7 @@ void Multistructure::setUniforms(){
             solid2Pos = glm::vec3(0.,0.,0.);
 
             sdf1 = 0.345;
-            sdf2 = 0.48;
+            sdf2 = 0.48 -  beat;
             sdfOpRadius = 0.8;
             sdfOpStairs = 4.;
     } else if(model == 7){
@@ -91,7 +91,7 @@ void Multistructure::setUniforms(){
             solid2Pos = glm::vec3(0.,0.,0.);
 
             sdf1 = 0.05;
-            sdf2 = 0.88;
+            sdf2 = 0.88 - beat;
             sdfOpRadius = 0.8;
             sdfOpStairs = 4.;
     } else if(model == 8){
@@ -102,7 +102,7 @@ void Multistructure::setUniforms(){
 
             sdf1 = 0.505;
             sdf2 = 0.735;
-            sdfOpRadius = 0.8;
+            sdfOpRadius = 1.0 - beat * 0.6; //0.8. it goes from 0.6 to 1.1
             sdfOpStairs = 4.;
     } else if(model == 9){
             sdfOp = 5;
@@ -111,7 +111,7 @@ void Multistructure::setUniforms(){
             solid2Pos = glm::vec3(0.,0.,0.);
 
             sdf1 = 0.505;
-            sdf2 = 0.835;
+            sdf2 = 0.835 - beat;
             sdfOpRadius = 0.8;
             sdfOpStairs = 4.;
     } else if(model == 10){
@@ -121,7 +121,7 @@ void Multistructure::setUniforms(){
             solid2Pos = glm::vec3(0.,0.,0.);
 
             sdf1 = 0.9;
-            sdf2 = 0.825;
+            sdf2 = 0.825 + ( beat * 0.075); //0.825
             sdfOpRadius = 0.8;
             sdfOpStairs = 4.;
     }

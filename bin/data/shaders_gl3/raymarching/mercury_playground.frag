@@ -806,8 +806,8 @@ float map(vec3 pos){
     float freqOnXZ = .4;
 
     pos.y += 1.0;
-    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-    pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
+    //pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
+    //pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
 
     return fBoolOps(pos, sdfOpRadius, sdfOpStairs);
 

@@ -19,8 +19,7 @@ void ofApp::setup(){
     SM.addScene<DebugFFT>();
     SM.changeScene("Scene0");
 
-    //FBO
-    finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGBA);
     finalFbo.begin();
     ofClear(0, 0, 0, 0);
     finalFbo.end();
@@ -37,6 +36,7 @@ void ofApp::draw(){
     // fullfill the FBO
     finalFbo.begin();
     ofClear(0, 0, 0, 255);
+
     SM.draw();
     finalFbo.end();
 

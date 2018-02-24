@@ -6,7 +6,7 @@ void RayMarchRings::loadAssets(){
 }
 
 void RayMarchRings::setUniforms(){
-    float resolution[] = {float(ofGetWidth()), float(ofGetHeight())};
+    float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
 
     //$Context(AppTime)->elapsed * 0.8;
