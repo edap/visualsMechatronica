@@ -1,31 +1,31 @@
-#include "Scene1.h"
+#include "Scene4.h"
 
-Scene1::Scene1() {
+Scene4::Scene4() {
     LM.setup(ofGetWidth(), ofGetHeight());
     LM.createLayer<Multistructure>(0.3);
 }
 
-void Scene1::update(){
+void Scene4::update(){
     LM.update();
     //cout << __PRETTY_FUNCTION__ << endl;
 }
 
-void Scene1::draw(){
+void Scene4::draw(){
      LM.draw();
 }
 
-void Scene1::viewWillAppear() {
+void Scene4::viewWillAppear() {
     //cout << __PRETTY_FUNCTION__ << endl;
 }
 
-void Scene1::viewDidAppear() {
+void Scene4::viewDidAppear() {
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-void Scene1::viewWillDisappear() {
+void Scene4::viewWillDisappear() {
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-void Scene1::viewDidDisappear() {
+void Scene4:viewDidDisappear() {
     cout << __PRETTY_FUNCTION__ << endl;
 }

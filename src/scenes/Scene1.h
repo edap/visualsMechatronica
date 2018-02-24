@@ -2,14 +2,14 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-#include "../layers/RotatingSpheres.h"
+#include "../layers/Multistructure.h"
 
 class Scene1 : public ofxAnimationPrimitives::Scene{
 public:
 
-    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene1);
+    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE();
 
-    Scene1();
+    Scene1(const string& bird);
     void update();
     void draw();
     void viewWillAppear();
@@ -18,4 +18,7 @@ public:
     void viewDidDisappear();
 
     ofxLayer::Manager LM;
+
+private:
+    string birdType;
 };

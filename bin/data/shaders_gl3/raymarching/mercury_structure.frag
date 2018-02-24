@@ -809,7 +809,7 @@ float map(vec3 pos){
 
     pos.y += 1.0;
     pos.z = pos.z - iGlobalTime * 3.3;
-    pMod3(pos, vec3(10.));
+    pMod3(pos, vec3(3., 4., 15.));
     //pModGrid2(pos.xz, vec2(2.,2.));
     pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
     pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
@@ -939,7 +939,8 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.5, -3.0,19.5);
+    float x = -1.8 + sin(iGlobalTime) * 2.8;
+    vec3 eye = vec3(x, -2.5,19.5);
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );

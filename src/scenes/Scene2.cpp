@@ -2,7 +2,7 @@
 
 Scene2::Scene2() {
     LM.setup(ofGetWidth(), ofGetHeight());
-    LM.createLayer<PlaygroundMercury>(0.3);
+    LM.createLayer<RotatingSpheres>(0.3);
 }
 
 void Scene2::update(){

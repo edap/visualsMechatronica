@@ -2,12 +2,12 @@
 
 void Multistructure::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/mercury_structure.frag", "");
-    image0.load("textures/eastern-rosella-big.jpg");
-    image1.load("textures/1.jpg");
-    image2.load("textures/2a.jpg");
-    image3.load("textures/4.jpg");
-    image4.load("textures/5a.jpg");
-    image5.load("textures/9c.jpeg");
+    image0.load("textures/eastern-rosella/eastern-rosella.jpg");
+    image1.load("textures/eastern-rosella/eastern-rosella-det.jpg");
+    image2.load("textures/budgeridgar/5.jpg");
+    image3.load("textures/budgeridgar/5a.jpg");
+    image4.load("textures/fischers-lovebird/fischers-lovebird.jpg");
+    image5.load("textures/fischers-lovebird/fischers-lovebird-big.jpg");
     image6.load("textures/9a.jpg");
 }
 

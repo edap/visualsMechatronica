@@ -13,9 +13,16 @@ void ofApp::setup(){
 
     //Scenes
     SM.addScene<Scene0>();
-    SM.addScene<Scene1>();
+    SM.addScene<Scene1>("budgeridgar");
     SM.addScene<Scene2>();
     SM.addScene<Scene3>();
+    SM.addScene<Scene4>();
+    SM.addScene<Scene5>();
+    SM.addScene<Scene6>();
+    SM.addScene<Scene7>();
+    SM.addScene<Scene8>();
+    SM.addScene<Scene9>();
+    SM.addScene<Scene10>();
     SM.addScene<DebugFFT>();
     SM.changeScene("Scene0");
 
@@ -74,6 +81,15 @@ void ofApp::switchScene(int key){
     if(key == 'w') SM.changeScene<Scene1>(0.1);
     if(key == 'e') SM.changeScene<Scene2>(0.1);
     if(key == 'r') SM.changeScene<Scene3>(0.1);
+    if(key == 't') SM.changeScene<Scene4>(0.1);
+
+    if(key == 'a') SM.changeScene<Scene5>(0.1);
+    if(key == 's') SM.changeScene<Scene6>(0.1);
+    if(key == 'd') SM.changeScene<Scene7>(0.1);
+    if(key == 'f') SM.changeScene<Scene8>(0.1);
+    if(key == 'g') SM.changeScene<Scene9>(0.1);
+    if(key == 'h') SM.changeScene<Scene10>(0.1);
+
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
 }
 

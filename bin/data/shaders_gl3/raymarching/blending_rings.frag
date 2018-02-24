@@ -182,7 +182,8 @@ void main(){
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    vec3 bgColor = vec3(0.1, 0.35, 0.75);
+    //vec3 bgColor = vec3(0.1, 0.35, 0.75);
+    vec3 bgColor = vec3(0.0, 0.0, 0.0);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );

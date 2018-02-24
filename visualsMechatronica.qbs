@@ -13,8 +13,8 @@ Project{
 
         files: [
             "bin/data/shaders_gl3/libs/mercury.glsl",
-            "bin/data/shaders_gl3/march1.frag",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/blending_rings.frag",
             "bin/data/shaders_gl3/raymarching/blobby.frag",
             "bin/data/shaders_gl3/raymarching/blobby_old_light.frag",
             "bin/data/shaders_gl3/raymarching/mercury_playground.frag",
@@ -51,10 +51,24 @@ Project{
             "src/ofApp.h",
             "src/scenes/Scene1.cpp",
             "src/scenes/Scene1.h",
+            "src/scenes/Scene10.cpp",
+            "src/scenes/Scene10.h",
             "src/scenes/Scene2.cpp",
             "src/scenes/Scene2.h",
             "src/scenes/Scene3.cpp",
             "src/scenes/Scene3.h",
+            "src/scenes/Scene4.cpp",
+            "src/scenes/Scene4.h",
+            "src/scenes/Scene5.cpp",
+            "src/scenes/Scene5.h",
+            "src/scenes/Scene6.cpp",
+            "src/scenes/Scene6.h",
+            "src/scenes/Scene7.cpp",
+            "src/scenes/Scene7.h",
+            "src/scenes/Scene8.cpp",
+            "src/scenes/Scene8.h",
+            "src/scenes/Scene9.cpp",
+            "src/scenes/Scene9.h",
         ]
 
         of.addons: [

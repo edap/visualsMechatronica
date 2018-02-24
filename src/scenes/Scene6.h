@@ -2,14 +2,15 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-#include "../layers/RotatingSpheres.h"
+//#include "../layers/Blobby.h"
+#include "../layers/Multistructure.h"
 
-class Scene2 : public ofxAnimationPrimitives::Scene{
+class Scene6 : public ofxAnimationPrimitives::Scene{
 public:
 
-    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene2);
+    OFX_ANIMATION_PRIMITIVES_DEFINE_SCENE(Scene6);
 
-    Scene2();
+    Scene6();
     void update();
     void draw();
     void viewWillAppear();
