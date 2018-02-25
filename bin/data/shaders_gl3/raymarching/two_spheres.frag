@@ -18,9 +18,9 @@ float sdfSphere(vec3 p, float r){
 }
 
 float perturbedSphere(vec3 p, float r, float dir){
-    //return length(p) - r + sin(p.x*3.14*10. + iGlobalTime*5.*dir) * 0.01
-    //                    + sin(p.z*3.14*30. + iGlobalTime*5.) * 0.01;
-    return length(p) - r + sin(p.x*3.14*10. + iGlobalTime*5.*dir) * 0.01;
+    return length(p) - r + sin(p.x*3.14*10. + iGlobalTime* 5.*dir) * 0.01
+                        + sin(p.z*3.14*10. + iGlobalTime* 5.) * 0.01;
+    //return length(p) - r + sin(p.x*3.14*10. + iGlobalTime*5.*dir) * 0.01;
 }
 
 float smin( float a, float b, float k ){
@@ -38,8 +38,8 @@ float map(vec3 pos){
 
     //float s = sdfSphere(pos, 0.5);
     float s = sdfSphere(pos, 0.7);
-    float pert = perturbedSphere(pos+vec3(-.48 * sin(iGlobalTime*0.2),0,0), beat, 1.);
-    float pert2 = perturbedSphere(pos+vec3(+.48 * sin(iGlobalTime*0.2),0,0), beat, -1.);
+    float pert = perturbedSphere(pos+vec3(-.52 * sin(iGlobalTime*0.2),0,0), 0.7, 1.);
+    float pert2 = perturbedSphere(pos+vec3(+.52 * sin(iGlobalTime*0.2),0,0), 0.7, -1.);
 
     //return max(smin(pert, pert2, 9.1), s);
     return smin(pert, pert2, 9.1);
@@ -66,8 +66,9 @@ vec3 calculateColor2(vec3 pos, vec3 dir){
   //light via https://vimeo.com/124721382
   vec3 nor = computeNormal(pos);
 
-  vec3 lig = normalize(vec3(1.,1.,1.));
+  //vec3 lig = normalize(vec3(1.,1.,1.));
   //vec3 lig = normalize(vec3(1.,sin(iGlobalTime*5.)*3.+.5, 1.));
+  vec3 lig = normalize(vec3(1., - max(0., beat) +7.5, 1.));
   float NL = max(dot(nor, lig),0.);
   float NV = max(dot(nor, -dir),0.);
   NV =  pow(1.-NV, 3.);
@@ -113,7 +114,7 @@ float raymarching(vec3 eye, vec3 marchingDirection){
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     vec3 eye = vec3(0.0, 0.0, 3.);
-    float fov = -3.;
+    float fov = -3.5;
     vec3 dir = normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);

@@ -27,7 +27,11 @@ int AudioAnalysis::getBand(){
     return selectedBand;
 };
 
-float AudioAnalysis::smoothBand(int n_band){
+void AudioAnalysis::setSmoothValue(float _val){
+    smoothValue = _val;
+};
+
+float AudioAnalysis::getFilteredBand(int n_band){
     auto octAvgs = oct.averages;
     auto o =  octAvgs[n_band];
     if (!mappedBands.count(n_band)){

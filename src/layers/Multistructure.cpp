@@ -15,7 +15,7 @@ void Multistructure::setUniforms(){
     float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
     int n_band = $Context(AudioAnalysis)->getBand();
-    float beat = $Context(AudioAnalysis)->smoothBand(n_band) * $Context(Panel)->audioMag;
+    float beat = $Context(AudioAnalysis)->getFilteredBand(n_band) * $Context(Panel)->audioMag;
 
     int model = $Context(Panel)->sdfSolidId1;
 

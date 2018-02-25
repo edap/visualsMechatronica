@@ -3,6 +3,7 @@
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
 #include "../layers/RotatingSpheres.h"
+#include "../context/AudioAnalysis.h"
 
 class Scene2 : public ofxAnimationPrimitives::Scene{
 public:

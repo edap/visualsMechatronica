@@ -87,8 +87,8 @@ void ofApp::switchScene(int key){
     if(key == 's') SM.changeScene<Scene6>(0.1);
     if(key == 'd') SM.changeScene<Scene7>(0.1);
     if(key == 'f') SM.changeScene<Scene8>(0.1);
-    if(key == 'g') SM.changeScene<Scene9>(0.1);
-    if(key == 'h') SM.changeScene<Scene10>(0.1);
+    if(key == 'z') SM.changeScene<Scene9>(0.1);
+    if(key == 'x') SM.changeScene<Scene10>(0.1);
 
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
 }

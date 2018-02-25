@@ -10,7 +10,8 @@ public:
     maxiFFTOctaveAnalyzer getOct() const;
     void changeBand(int n_band);
     int getBand();
-    float smoothBand(int n_band);
+    float getFilteredBand(int n_band);
+    void setSmoothValue(float val);
 
 private:
     maxiFFTOctaveAnalyzer oct;
@@ -33,5 +34,6 @@ private:
     // This is the number of values the will be stored in the hisotry
     int max_history = 11; //choose always a odd number.
     float coef = 80;
+    float smoothValue = 0.8;
     float rectBoxcarFilter(const float oct, std::deque<float>* _history);
 };
