@@ -665,20 +665,10 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 uniform sampler2D tex4;
-
-
 uniform vec2 resolution;
 uniform float beat;
 uniform float iGlobalTime;
-uniform float sdf1;
 uniform float sdf2;
-uniform int sdfOp;
-uniform float sdfOpRadius;
-uniform float sdfOpStairs;
-uniform int sdfSolidId1;
-uniform int sdfSolidId2;
-uniform vec3 solid2Pos;
-
 in vec2 vTexCoord;
 out vec4 fragColor;
 
@@ -690,83 +680,12 @@ const float FAR_CLIP = 100.00;
 
 // noise
 float hash(float n) { return fract(sin(n) * 1e4); }
-float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-
 float noise(float x) {
         float i = floor(x);
         float f = fract(x);
         float u = f * f * (3.0 - 2.0 * f);
         return mix(hash(i), hash(i + 1.0), u);
 }
-
-
-float getSolid(vec3 p, int solidId, float size){
-    float d;
-    float sdfR = size;
-    float sdrSmallR = 0.3;
-    float height = 0.8;
-    float c = 1.2;
-    switch (int(solidId)) {
-            case 0: d = fBox(p,vec3(size)); break;
-            case 1: d = fSphere(p, size); break;
-            case 2: d = fBlob(p); break;
-            case 3: d = fCylinder(p, sdfR, height); break;
-            case 4: d = fCapsule(p, sdfR, c); break;
-            case 5: d = fTorus(p, sdrSmallR, sdfR); break;
-            case 6: d = fHexagonCircumcircle(p, vec2(height,height)); break;
-            case 7: d = fHexagonIncircle(p, vec2(height,height)); break;
-            case 8: d = fBox(p,vec3(1)); break;
-            case 9: d = fCone(p, sdrSmallR, height); break;
-            case 10: d = fOctahedron(p,  sdfR, c); break;
-            case 11: d = fDodecahedron( p,  sdfR, c); break;
-            case 12: d = fIcosahedron( p,  sdfR, c); break;
-            case 13: d = fTruncatedOctahedron( p,  sdfR, c); break;
-            case 14: d = fTruncatedIcosahedron( p,  sdfR, c); break;
-            case 15: d = fOctahedron( p,  sdfR); break;
-            case 16: d = fDodecahedron( p,  sdfR); break;
-            case 17: d = fIcosahedron( p,  sdfR); break;
-            case 18: d = fTruncatedOctahedron( p,  sdfR); break;
-            case 19: d = fTruncatedIcosahedron( p,  sdfR); break;
-    }
-    return d;
-}
-
-float fBoolOps(vec3 p, float r, float n) {
-        //n = 2;
-        //float scaledSdf2 = sdf2 * (0.1 + max(0.0, beat));
-        float box = getSolid(p, sdfSolidId1, sdf1);
-        float sphere = getSolid(p+solid2Pos, sdfSolidId2, sdf2);
-        float d;
-        //float r = 0.8;
-        //float n = 4;
-        //float box = fBox(p,vec3(1));
-        //float sphere = length(p-vec3(1))-1;
-        switch (int(sdfOp)) {
-                case 0: d = min(box,sphere); break;
-                case 1: d = max(box,sphere); break;
-                case 2: d = max(box,-sphere); break;
-                case 3: d = fOpUnionRound(box,sphere,r); break;
-                case 4: d = fOpIntersectionRound(box,sphere,r); break;
-                case 5: d = fOpDifferenceRound(box,sphere,r); break;
-                case 6: d = fOpUnionChamfer(box,sphere,r); break;
-                case 7: d = fOpIntersectionChamfer(box,sphere,r); break;
-                case 8: d = fOpDifferenceChamfer(box,sphere,r); break;
-                case 9 : d = fOpUnionColumns(box,sphere,r,n); break;
-                case 10: d = fOpIntersectionColumns(box,sphere,r,n); break; // not working, why?
-                case 11: d = fOpDifferenceColumns(box,sphere,r,n); break;
-                case 12: d = fOpUnionStairs(box,sphere,r,n); break;
-                case 13: d = fOpIntersectionStairs(box,sphere,r,n); break;
-                case 14: d = fOpDifferenceStairs(box,sphere,r,n); break;
-                case 15: d = fOpPipe(box,sphere,r*0.3); break;
-                case 16: d = fOpEngrave(box,sphere,r*0.3); break;
-                case 17: d = fOpGroove(box,sphere,r*0.3, r*0.3); break;
-                case 18: d = fOpTongue(box,sphere,r*0., r*0.3); break;
-                // The implementation of the next one is left as an exercise to the reader:
-                //case 19: d = fOpFuckingBaroquePictureFrame(box,sphere,r); break;
-        }
-        return d;
-}
-
 
 vec3 lightDirection = normalize(vec3(1.0, 0.6, 1.));
 
@@ -776,47 +695,18 @@ vec2 rotate(vec2 pos, float angle){
     return mat2(c, s, -s, c) * pos;
 }
 
-// operations
-float smin( float a, float b, float k ){
-    float res = exp( -k*a ) + exp( -k*b );
-    return -log( res )/k;
-}
-
-float smins( float a, float b ){
-    return smin(a, b, 3.0);
-}
-
-float sdfSphere(vec3 pos, float radius){
-    return length(pos) - radius;
-}
-
-float sdTorus( vec3 p, vec2 t ){
-    vec2 q = vec2(length(p.xz)-t.x,p.y);
-    return length(q)-t.y;
-}
-
-float bendTorus( vec3 p, vec2 dim ){
-    float wave = sin(iGlobalTime * 0.2) * 2.2;
-    float c = cos(wave*p.y);
-    float s = sin(wave*p.y);
-    mat2  m = mat2(c,-s,s,c);
-    vec3  q = vec3(m*p.xy,p.z);
-    return sdTorus(q, dim);
-}
-
 float map(vec3 pos){
-    float freqOnYZ = .8;
-    float freqOnXZ = .4;
-
     pos.y += 1.0;
     pos.z = pos.z - iGlobalTime * 4.3;
     pMod3(pos, vec3(3.1, 3.1, 10.));
     //pModGrid2(pos.xz, vec2(2.,2.));
-    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-    //pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
-
-    return fBoolOps(pos, sdfOpRadius, sdfOpStairs);
-
+    pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*.7);
+    //pos.yz = rotate(pos.yz, cos(iGlobalTime*0.8)*.7);
+    float sdfOpRadius = 0.854;
+    float sdfOpStairs = 4.;
+    float blob = fBlob(pos);
+    float torus = fTorus(pos, 0.3, sdf2);
+    return fOpDifferenceColumns(blob,torus,sdfOpRadius,sdfOpStairs);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -896,9 +786,8 @@ float fresnel(vec3 normal, vec3 dir){
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
-
-    return color4.xyz;
+    vec4 color = texture(tex4, (0.5 * (r.xy) + .5));
+    return color.xyz;
 }
 
 vec3 calculateColor(vec3 pos, vec3 dir){
