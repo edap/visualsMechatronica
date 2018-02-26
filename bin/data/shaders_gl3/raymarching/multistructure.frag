@@ -673,7 +673,7 @@ in vec2 vTexCoord;
 out vec4 fragColor;
 
 const int MAX_MARCHING_STEPS = 64;
-const float EPSILON = 0.0011;
+const float EPSILON = 0.0001;
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
 
@@ -696,8 +696,8 @@ vec2 rotate(vec2 pos, float angle){
 }
 
 float map(vec3 pos){
-    pos.y += 1.0;
-    pos.z = pos.z - iGlobalTime * 4.3;
+    pos.y += 0.9;
+    pos.z -= (iGlobalTime*4.);
     pMod3(pos, vec3(3.1, 3.1, 10.));
     //pModGrid2(pos.xz, vec2(2.,2.));
     pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*.7);
@@ -732,33 +732,6 @@ float raymarching(vec3 eye, vec3 marchingDirection){
     return FAR_CLIP;
 }
 
-float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
-    float res = 1.0;
-    float t = mint;
-    for( int i=0; i<16; i++ ) {
-        float h = map( ro + rd*t );
-        res = min( res, 8.0*h/t );
-        t += clamp( h, 0.02, 0.10 );
-        if( h<0.001 || t>tmax ) break;
-    }
-    return clamp( res, 0.0, 1.0 );
-}
-
-
-float ao( in vec3 pos, in vec3 nor ){
-    float occ = 0.0;
-    float sca = 1.0;
-    for( int i=0; i<5; i++ )
-    {
-        float hr = 0.01 + 0.06*float(i)/4.0;
-        vec3 aopos =  nor * hr + pos;
-        float dd = map( aopos );
-        occ += -(dd-hr)*sca;
-        sca *= 0.95;
-    }
-    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 );
-}
-
 vec3 computeNormal(vec3 pos){
     vec2 eps = vec2(0.01, 0.);
     return normalize(vec3(
@@ -769,7 +742,7 @@ vec3 computeNormal(vec3 pos){
 }
 
 float diffuse(vec3 normal){
-    float ambient = 0.7;
+    float ambient = 0.5;
     return clamp( dot(normal, lightDirection) * ambient + ambient, 0.0, 1.0 );
 }
 
@@ -798,10 +771,26 @@ vec3 calculateColor(vec3 pos, vec3 dir){
     float diffLight = diffuse(normal);
     float specLight = specular(normal, dir);
     float fresnelLight = fresnel(normal, dir);
-    float ambientOcc = ao(pos, normal);
     color = (diffLight + specLight + fresnelLight) * colTex;
-    return colTex;
+    return color;
 }
+
+vec3 calculateColor2(vec3 pos, vec3 dir){
+  //light via https://vimeo.com/124721382
+  vec3 nor = computeNormal(pos);
+
+  vec3 lig = normalize(vec3(1.,-1.,1.));
+  float NL = max(dot(nor, lig),0.);
+  float NV = max(dot(nor, -dir),0.);
+  NV =  pow(1.-NV, 3.);
+
+  float bli =  max(dot(normalize(lig+-dir), nor), 0.);
+  bli = pow(bli, 80.);
+
+  float c = NL + NV * 0.5 + bli;
+  return vec3(c) * getRefTexture(nor, dir);
+}
+
 
 mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
     vec3 cw = normalize(ta-ro);
@@ -814,7 +803,7 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
-    vec3 eye = vec3(x, -2.5,19.5);
+    vec3 eye = vec3(x, -2.5, 19);
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
@@ -827,19 +816,14 @@ void main(){
     vec3 bgColor = vec3(0.0, 0.0, 0.0);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
-        vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
-        float shadow  = softshadow(collision, lightDirection, 0.02, 2.5 );
+        vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );
         color = calculateColor(collision, dir);
 
-        shadow = mix(shadow, 1.0, 0.7);
-        color = color * shadow;
-        float fogFactor = exp(collision.z * 0.04);
+        float fogFactor = exp(collision.z * 0.001);
         color = mix(bgColor, color, fogFactor);
     } else {
         color = bgColor;
     }
 
-
     fragColor = vec4(color , 1.0);
-
 }
