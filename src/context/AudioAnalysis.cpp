@@ -27,18 +27,15 @@ int AudioAnalysis::getBand(){
     return selectedBand;
 };
 
-void AudioAnalysis::setSmoothValue(float _val){
-    smoothValue = _val;
-};
 
-float AudioAnalysis::getFilteredBand(int n_band){
+float AudioAnalysis::getFilteredBand(int n_band, float smoothValue){
     auto octAvgs = oct.averages;
     auto o =  octAvgs[n_band];
     if (!mappedBands.count(n_band)){
         //ofLogError("band "+ ofToString(n_band) + "not in vector nFilteredBands, add it if you need it");
-        return rectBoxcarFilter(o, &tmpHistory);
+        return rectBoxcarFilter(o, &tmpHistory, smoothValue);
     } else {
-       return rectBoxcarFilter(o, &mappedBands[n_band]);
+       return rectBoxcarFilter(o, &mappedBands[n_band], smoothValue);
     }
 };
 
@@ -51,7 +48,7 @@ float AudioAnalysis::getFilteredBand(int n_band){
 // It accepts two parameters, val is the value to be smoothed, _history is a deque
 // that contains the last 11 values. If there are no 11 values in the queue, it will fullfill and in
 // the meantime it will return 0
-float AudioAnalysis::rectBoxcarFilter(const float val, std::deque<float>* _history){
+float AudioAnalysis::rectBoxcarFilter(const float val, std::deque<float>* _history, float smoothValue){
 
     // guard, sometimes the octave analysis return negative values
     // for the bin at the end of the spektrum
@@ -70,7 +67,7 @@ float AudioAnalysis::rectBoxcarFilter(const float val, std::deque<float>* _histo
         }
 
         sum /= max_history;
-        coef = (sum/coef ) * $Context(Panel)->audioSmooth;
+        coef = (sum/coef ) * smoothValue;
         return coef;
     } else {
        _history->push_back(val);

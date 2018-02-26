@@ -7,10 +7,10 @@
 
 using namespace ofxLayer;
 
-class Multistructure : public SimpleFragment {
+class MercuryModels : public SimpleFragment {
 
 public:
-    OFX_LAYER_DEFINE_LAYER_CLASS(Multistructure)
+    OFX_LAYER_DEFINE_LAYER_CLASS(MercuryModels)
     void setUniforms();
     void loadAssets();
 

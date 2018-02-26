@@ -1,7 +1,6 @@
 #include "Scene2.h"
 
 Scene2::Scene2() {
-    $Context(AudioAnalysis)->setSmoothValue(1.3);
     LM.setup(ofGetWidth(), ofGetHeight());
     LM.createLayer<RotatingSpheres>(0.3);
 }

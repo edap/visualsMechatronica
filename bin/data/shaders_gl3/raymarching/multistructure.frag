@@ -664,23 +664,8 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-uniform sampler2D tex0;
-uniform sampler2D tex1;
-uniform sampler2D tex2;
-uniform sampler2D tex3;
 uniform sampler2D tex4;
-uniform sampler2D tex5;
-uniform sampler2D tex6;
+
 
 uniform vec2 resolution;
 uniform float beat;
@@ -832,15 +817,6 @@ float map(vec3 pos){
 
     return fBoolOps(pos, sdfOpRadius, sdfOpStairs);
 
-    //return fHexagonIncircle(pos, vec2(1.2,1.2));
-    //return fBlob(pos);
-    //return fHexagonCircumcircle(pos, vec2(1.2,1.2));
-    //return fTruncatedOctahedron(pos, 1.3);
-
-    //float box0 = fBox(pos, vec3(1));
-    //float box1 = fBox(pos-vec3(1), vec3(1));
-    //return fOpUnionChamfer(box0, box1, 0.2);
-
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -920,14 +896,7 @@ float fresnel(vec3 normal, vec3 dir){
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    //tex1.y+= fract(iGlobalTime);
-    vec4 color0 = texture(tex0, (0.5 * (r.xy) + .5));
-    vec4 color1 = texture(tex1, (0.5 * (r.xy) + .5));
-    vec4 color2 = texture(tex2, (0.5 * (r.xy) + .5));
-    vec4 color3 = texture(tex3, (0.5 * (r.xy) + .5));
     vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
-    vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
-    vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
 
     return color4.xyz;
 }
@@ -966,7 +935,6 @@ void main(){
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    //vec3 bgColor = vec3(0.1, 0.35, 0.75);
     vec3 bgColor = vec3(0.0, 0.0, 0.0);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
@@ -982,8 +950,7 @@ void main(){
         color = bgColor;
     }
 
-    //
-    //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
+
     fragColor = vec4(color , 1.0);
-    //fragColor = vec4(vec3(1.,0.,0.), 1.);
+
 }

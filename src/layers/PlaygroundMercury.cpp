@@ -14,8 +14,10 @@ void PlaygroundMercury::loadAssets(){
 void PlaygroundMercury::setUniforms(){
     float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
-    int n_band = $Context(AudioAnalysis)->getBand();
-    float beat = $Context(AudioAnalysis)->getFilteredBand(n_band) * $Context(Panel)->audioMag;
+
+    float audioMag = $Context(Panel)->audioMag;
+    int nBand = $Context(AudioAnalysis)->getBand();
+    float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, $Context(Panel)->audioSmooth) * audioMag;
 
     float sdf1 = $Context(Panel)->sdf1;
     float sdf2 = $Context(Panel)->sdf2;

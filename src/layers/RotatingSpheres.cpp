@@ -6,13 +6,18 @@ void RotatingSpheres::loadAssets(){
 }
 
 void RotatingSpheres::setUniforms(){
+    float audioMag = 0.648;
+    int nBand = 6;
+
+    // debug with panel
+    // $Context(AudioAnalysis)->setSmoothValue($Context(Panel)->audioSmooth);
+    // float audioMag = $Context(Panel)->audioMag;
+    // int nBand = $Context(AudioAnalysis)->getBand();
     float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
-    int n_band = $Context(AudioAnalysis)->getBand();
-    float beat = $Context(AudioAnalysis)->getFilteredBand(6) * 0.648;
 
-    //float b = $Context(AudioAnalysis)->smoothBand(6) * $Context(Panel)->audioMag;
-    //cout << b << endl;
+    float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, 1.3) * audioMag;
+
 
     shader.setUniform1f("iGlobalTime", time);
     shader.setUniform1f("beat", beat);
