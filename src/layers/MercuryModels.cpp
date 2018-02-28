@@ -1,7 +1,7 @@
 #include "MercuryModels.h"
 
 void MercuryModels::loadAssets(){
-    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/mercury_structure.frag", "");
+    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blending_boh.frag", "");
     image0.load("textures/eastern-rosella/eastern-rosella.jpg");
     image1.load("textures/eastern-rosella/eastern-rosella-det.jpg");
     image2.load("textures/budgeridgar/5.jpg");
@@ -28,7 +28,18 @@ void MercuryModels::setUniforms(){
     int sdfOp, sdfSolidId1, sdfSolidId2;
     glm::vec3 solid2Pos;
 
-    if (model == 1){
+    if (model == 0){
+        sdfOp = 11;
+        sdfSolidId1 = 2;
+        sdfSolidId2 =5;
+        solid2Pos = glm::vec3(0.,0.,0.);
+
+        sdf1 = 0.345;
+        sdf2 = 0.555;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.6;
+        sdfOpStairs = 7.6;
+    }else if (model == 1){
         sdfOp = 11;
         sdfSolidId1 = 2;
         sdfSolidId2 =5;

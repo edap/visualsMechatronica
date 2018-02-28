@@ -24,6 +24,7 @@ void ofApp::setup(){
     SM.addScene<Scene9>();
     SM.addScene<Scene10>();
     SM.addScene<DebugFFT>();
+    SM.addScene<MercurySketch>();
     SM.changeScene("Scene0");
 
     finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGBA);
@@ -91,6 +92,7 @@ void ofApp::switchScene(int key){
     if(key == 'x') SM.changeScene<Scene10>(0.1);
 
     if(key == 'o') SM.changeScene<DebugFFT>(0.1);
+    if(key == 'p') SM.changeScene<MercurySketch>(0.1);
 }
 
 //--------------------------------------------------------------

@@ -14,6 +14,7 @@ Project{
         files: [
             "bin/data/shaders_gl3/libs/mercury.glsl",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/blending_boh.frag",
             "bin/data/shaders_gl3/raymarching/blending_rings.frag",
             "bin/data/shaders_gl3/raymarching/blobby.frag",
             "bin/data/shaders_gl3/raymarching/blobby_old_light.frag",
@@ -47,6 +48,8 @@ Project{
             "src/layers/templates/SimpleFragment.h",
             "src/scenes/DebugFFT.cpp",
             "src/scenes/DebugFFT.h",
+            "src/scenes/MercurySketch.cpp",
+            "src/scenes/MercurySketch.h",
             "src/scenes/Scene0.cpp",
             "src/scenes/Scene0.h",
             "src/main.cpp",

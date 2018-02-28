@@ -13,5 +13,6 @@
 #include "scenes/Scene9.h"
 #include "scenes/Scene10.h"
 #include "scenes/DebugFFT.h"
+#include "scenes/MercurySketch.h"
 
 #endif /* Scenes_h */

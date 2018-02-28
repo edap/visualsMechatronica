@@ -815,16 +815,25 @@ vec3 bendPosition( vec3 p ){
 }
 
 float map(vec3 pos){
-    float freqOnYZ = .8;
-    float freqOnXZ = .4;
-
     pos.y += 1.0;
-    //pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-    //pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
 
-    // vec3 bendedPos = bendPosition(pos);
+//    float freqOnYZ = .1;
+//    float freqOnXZ = .4;
 
-    return fBoolOps(pos, sdfOpRadius, sdfOpStairs);
+//    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
+//    pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
+//    //vec3 bendedPos = bendPosition(pos);
+
+    float yOscFreq = 0.2;
+    vec3 d1pos = vec3(0.,    cos(iGlobalTime*(yOscFreq*2.)+11.) * 0.56,  sin(iGlobalTime*.12) * -2.2) * 1.2;
+//    vec3 d2pos = vec3(2.55,  sin(iGlobalTime*(yOscFreq*2.)+2.) * 0.81,   cos(iGlobalTime*.3) * 0.4)   * 1.5;
+
+
+    float d1 = fBoolOps(d1pos, sdfOpRadius, sdfOpStairs);
+    float d2 = fBoolOps(pos, sdfOpRadius, sdfOpStairs);
+
+    return d2;
+    //return smins(d1, d2);
 
     //return fHexagonIncircle(pos, vec2(1.2,1.2));
     //return fBlob(pos);
