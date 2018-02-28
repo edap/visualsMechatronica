@@ -2,7 +2,7 @@
 
 Scene9::Scene9() {
     LM.setup(ofGetWidth(), ofGetHeight());
-    LM.createLayer<Multistructure>(0.3);
+    LM.createLayer<Deformed3>(0.3);
 }
 
 void Scene9::update(){

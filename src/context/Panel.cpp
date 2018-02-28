@@ -5,8 +5,8 @@ Panel::Panel(){}
 void Panel::setup(){
     gui.setup();
     gui.setPosition(glm::vec2(0,20));
-    gui.add(audioSmooth.setup("audioSmooth", 0.5, 0.2, 2.0));
-    gui.add(audioMag.setup("audioMag", 0.05, 0.0, 1.2));
+    gui.add(audioSmooth.setup("audioSmooth", 0.5, 0.2, 4.0));
+    gui.add(audioMag.setup("audioMag", 0.05, 0.0, 0.5));
 
     gui.add(sdf1.setup("sdfSize1", 0.5, 0.0, 1.0));
     gui.add(sdf2.setup("sdfSize2", 0.5, 0.0, 1.0));

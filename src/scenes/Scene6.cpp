@@ -2,7 +2,7 @@
 
 Scene6::Scene6() {
     LM.setup(ofGetWidth(), ofGetHeight());
-    LM.createLayer<Multistructure>(0.3);
+    LM.createLayer<Multistructure2>(0.3);
 }
 
 void Scene6::update(){

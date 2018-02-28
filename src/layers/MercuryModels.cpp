@@ -22,7 +22,7 @@ void MercuryModels::setUniforms(){
     //int nBand = 1;
 
     float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, smoothVal) * audioMag;
-    int model = $Context(Panel)->sdfModelId
+    int model = $Context(Panel)->sdfModelId;
 
     float sdf1, sdf2, sdfOpRadius, sdfOpStairs;
     int sdfOp, sdfSolidId1, sdfSolidId2;

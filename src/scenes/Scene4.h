@@ -3,7 +3,7 @@
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
 //#include "../layers/Blobby.h"
-#include "../layers/Multistructure.h"
+#include "../layers/Multistructure1.h"
 
 class Scene4 : public ofxAnimationPrimitives::Scene{
 public:
