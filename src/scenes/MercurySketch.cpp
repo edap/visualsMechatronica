@@ -3,7 +3,6 @@
 MercurySketch::MercurySketch() {
     cout << "MercurySketch: " << endl;
     LM1.setup(ofGetWidth(), ofGetHeight());
-    //LM1.createLayer<PlaygroundMercury>(0.3);
     LM1.createLayer<MercuryModels>(0.3);
 }
 

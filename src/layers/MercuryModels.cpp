@@ -1,7 +1,7 @@
 #include "MercuryModels.h"
 
 void MercuryModels::loadAssets(){
-    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blending_boh.frag", "");
+    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/mercury_models.frag", "");
     image0.load("textures/eastern-rosella/eastern-rosella.jpg");
     image1.load("textures/eastern-rosella/eastern-rosella-det.jpg");
     image2.load("textures/budgeridgar/5.jpg");
@@ -22,7 +22,7 @@ void MercuryModels::setUniforms(){
     //int nBand = 1;
 
     float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, smoothVal) * audioMag;
-    int model = $Context(Panel)->sdfSolidId1;
+    int model = $Context(Panel)->sdfModelId
 
     float sdf1, sdf2, sdfOpRadius, sdfOpStairs;
     int sdfOp, sdfSolidId1, sdfSolidId2;

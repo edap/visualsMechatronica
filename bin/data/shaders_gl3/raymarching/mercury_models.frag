@@ -705,7 +705,6 @@ const float FAR_CLIP = 100.00;
 
 // noise
 float hash(float n) { return fract(sin(n) * 1e4); }
-float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
 
 float noise(float x) {
         float i = floor(x);
@@ -824,8 +823,7 @@ float map(vec3 pos){
     float freqOnXZ = .4;
 
     pos.y += 1.0;
-    pos.z = pos.z - iGlobalTime * 4.3;
-    pMod3(pos, vec3(3.1, 3.1, 10.));
+    //pMod3(pos, vec3(3.1, 3.1, 10.));
     //pModGrid2(pos.xz, vec2(2.,2.));
     pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
     //pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
@@ -840,7 +838,6 @@ float map(vec3 pos){
     //float box0 = fBox(pos, vec3(1));
     //float box1 = fBox(pos-vec3(1), vec3(1));
     //return fOpUnionChamfer(box0, box1, 0.2);
-
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -955,12 +952,12 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
-    vec3 eye = vec3(x, -2.5,19.5);
+    //float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
+    vec3 eye = vec3(-1.8, -2.5,19.5);
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 5.0;
+    float fov = 10.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
@@ -982,8 +979,5 @@ void main(){
         color = bgColor;
     }
 
-    //
-    //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
     fragColor = vec4(color , 1.0);
-    //fragColor = vec4(vec3(1.,0.,0.), 1.);
 }

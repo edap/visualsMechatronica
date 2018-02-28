@@ -22,6 +22,7 @@ public:
     ofxFloatSlider sdfOpStairs;
     ofxIntSlider sdfSolidId1;
     ofxIntSlider sdfSolidId2;
+    ofxIntSlider sdfModelId;
     ofxVec3Slider sdfSolid2Pos;
 };
 

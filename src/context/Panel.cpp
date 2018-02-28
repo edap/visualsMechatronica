@@ -16,6 +16,7 @@ void Panel::setup(){
     gui.add(sdfSolidId1.setup("sdfSolidId1", 2, 0, 19));
     gui.add(sdfSolidId2.setup("sdfSolidId2", 5, 0, 19));
     gui.add(sdfSolid2Pos.setup("sdfSolid2Pos", glm::vec3(0.,0.,0.), glm::vec3(0.,0.,0.), glm::vec3(2.,2.,2.)));
+    gui.add(sdfModelId.setup("sdfModelId", 4, 0, 10));
 }
 
 void Panel::draw(){

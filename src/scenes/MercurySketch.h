@@ -2,7 +2,6 @@
 #include "ofMain.h"
 #include "ofxAnimationPrimitives.h"
 #include "ofxLayer.h"
-//#include "../layers/PlaygroundMercury.h"
 #include "../layers/MercuryModels.h"
 
 class MercurySketch : public ofxAnimationPrimitives::Scene{
