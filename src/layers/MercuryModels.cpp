@@ -27,7 +27,8 @@ void MercuryModels::setUniforms(){
     float sdf1, sdf2, sdfOpRadius, sdfOpStairs;
     int sdfOp, sdfSolidId1, sdfSolidId2;
     glm::vec3 solid2Pos;
-
+    cout << model << endl;
+    cout << "model" << endl;
     if (model == 0){
         sdfOp = 11;
         sdfSolidId1 = 2;

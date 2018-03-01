@@ -18,6 +18,7 @@ Project{
             "bin/data/shaders_gl3/raymarching/blending_rings.frag",
             "bin/data/shaders_gl3/raymarching/blobby.frag",
             "bin/data/shaders_gl3/raymarching/blobby_old_light.frag",
+            "bin/data/shaders_gl3/raymarching/cup.frag",
             "bin/data/shaders_gl3/raymarching/mercury_models.frag",
             "bin/data/shaders_gl3/raymarching/multistructure.frag",
             "bin/data/shaders_gl3/raymarching/multistructure1.frag",
