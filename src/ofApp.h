@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxMaxim.h"
 #include "ofxAnimationPrimitives.h"
+#include "ofxVideoRecorder.h"
 //Context
 #include "ofxGlobalContext.h"
 #include "context/AppTime.h"
@@ -15,6 +16,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -28,6 +30,7 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     void audioOut(ofSoundBuffer &buffer);
+    void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
 
 private:
     void init_context();
@@ -36,12 +39,25 @@ private:
     void switchScene(int key);
     void switchBand(int key);
 
+    // Video recording
+    void setupVideoRecording();
+    void videoRecEvent(int key);
+    void recVideo();
+
+    ofxVideoRecorder vidRecorder;
+    string fileName;
+    string fileExt;
+    bool bRecording;
+    ofPixels pixels; // this is used to store the pixels read from the fbo
+
     // Animation Primitives
     ofxAnimationPrimitives::SceneManager SM;
 
     // Audio vars
     bool          audioDisabled = false;
-    unsigned bufferSize, sampleRate, startTime, endTime, currentTime;
+    unsigned startTime, endTime, currentTime;
+    unsigned sampleRate = 44100;
+    unsigned bufferSize = 512;
     double frequency, currentSample;
     double outputs[2];
 

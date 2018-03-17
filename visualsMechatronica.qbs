@@ -98,7 +98,8 @@ Project{
             'ofxMaxim',
             'ofxAutoReloadedShader',
             'ofxAnimationPrimitives',
-            'ofxGlobalContext'
+            'ofxGlobalContext',
+            'ofxVideoRecorder'
         ]
 
         // additional flags for the project. the of module sets some

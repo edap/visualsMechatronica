@@ -46,6 +46,8 @@ void ofApp::draw(){
     ofClear(0, 0, 0, 255);
 
     SM.draw();
+    //this line
+    recVideo();
     finalFbo.end();
 
     // draw the FBO
@@ -97,8 +99,10 @@ void ofApp::switchScene(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    cout << key << endl;
     switchScene(key);
     switchBand(key);
+    videoRecEvent(key);
     if(key == 'g') drawGui = !drawGui;
 }
 
@@ -155,9 +159,6 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 void ofApp::setupAudio(){
     if (audioDisabled) { return; };
 
-    sampleRate = 44100;
-    bufferSize = 512;
-
     fft.setup(1024, 512, 256);
     //oct.setup(44100, 1024, 10);
     oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
@@ -174,4 +175,75 @@ void ofApp::init_context(){
     ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
     ofxGlobalContext::Manager::defaultManager().createContext<Panel>();
     ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(oct);
+}
+
+void ofApp::setupVideoRecording(){
+    fileName = "testMovie";
+    fileExt = ".mov";
+
+    // override the default codecs if you like
+    // run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
+    vidRecorder.setVideoCodec("mpeg4");
+    vidRecorder.setVideoBitrate("800k");
+    vidRecorder.setAudioCodec("mp3");
+    vidRecorder.setAudioBitrate("192k");
+
+    ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
+    //ofSetWindowShape(vidGrabber.getWidth(), vidGrabber.getHeight()	);
+    bRecording = false;
+ofEnableAlphaBlending();
+}
+
+void ofApp::videoRecEvent(int key){
+    if (key==43) {
+        bRecording = !bRecording;
+        if(bRecording && !vidRecorder.isInitialized()) {
+            //vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 30, sampleRate, 2);
+            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 30); // no audio
+//            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, 0,0,0, sampleRate, channels); // no video
+//          vidRecorder.setupCustomOutput(vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels, "-vcodec mpeg4 -b 1600k -acodec mp2 -ab 128k -f mpegts udp://localhost:1234"); // for custom ffmpeg output string (streaming, etc)
+
+            // Start recording
+            vidRecorder.start();
+        }
+        else if(!bRecording && vidRecorder.isInitialized()) {
+            vidRecorder.setPaused(true);
+        }
+        else if(bRecording && vidRecorder.isInitialized()) {
+            vidRecorder.setPaused(false);
+        }
+    }
+    if (key==45) {
+        bRecording = false;
+        vidRecorder.close();
+    }
+}
+
+void ofApp::recVideo(){
+    //vidGrabber.update();
+    //if(vidGrabber.isFrameNew() && bRecording){
+    finalFbo.readToPixels(pixels);
+    bool success = vidRecorder.addFrame(pixels);
+    if (!success) {
+        ofLogWarning("This frame was not added!");
+    }
+    //}
+
+    // Check if the video recorder encountered any error while writing video frame or audio smaples.
+    if (vidRecorder.hasVideoError()) {
+        ofLogWarning("The video recorder failed to write some frames!");
+    }
+
+    if (vidRecorder.hasAudioError()) {
+        ofLogWarning("The video recorder failed to write some audio samples!");
+    }
+}
+
+void ofApp::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
+    cout << "The recoded video file is now complete." << endl;
+}
+
+void ofApp::exit(){
+    ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
+    vidRecorder.close();
 }
