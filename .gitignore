@@ -1,5 +1,6 @@
 bin/visualsMechatronica_debug
 bin/data/music/*
 bin/data/*.mov
+bin/data/*.mp4
 bin/data/textures/transparents/new/*
 src/*.autosave
