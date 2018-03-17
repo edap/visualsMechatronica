@@ -3,7 +3,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetVerticalSync(true);
+    //ofSetVerticalSync(true);
     // Audio, play the track and initialize audio analysis
     setupAudio();
 
@@ -27,28 +27,32 @@ void ofApp::setup(){
     SM.addScene<MercurySketch>();
     SM.changeScene("Scene0");
 
-    finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGBA);
+    finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGB);
     finalFbo.begin();
     ofClear(0, 0, 0, 0);
     finalFbo.end();
+
+    setupVideoRecording();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     ofxGlobalContext::Manager::defaultManager().update();
     SM.update();
-}
 
-//--------------------------------------------------------------
-void ofApp::draw(){
-    // fullfill the FBO
     finalFbo.begin();
     ofClear(0, 0, 0, 255);
 
     SM.draw();
     //this line
-    recVideo();
     finalFbo.end();
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    // fullfill the FBO
+
+    recVideo();
 
     // draw the FBO
     ofSetColor(255);
@@ -178,20 +182,23 @@ void ofApp::init_context(){
 }
 
 void ofApp::setupVideoRecording(){
+    ofSetFrameRate(60);
+    ofSetLogLevel(OF_LOG_VERBOSE);
+
     fileName = "testMovie";
     fileExt = ".mov";
 
     // override the default codecs if you like
     // run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
+
     vidRecorder.setVideoCodec("mpeg4");
     vidRecorder.setVideoBitrate("800k");
-    vidRecorder.setAudioCodec("mp3");
-    vidRecorder.setAudioBitrate("192k");
+    //vidRecorder.setAudioCodec("mp3");
+    //vidRecorder.setAudioBitrate("192k");
 
     ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
-    //ofSetWindowShape(vidGrabber.getWidth(), vidGrabber.getHeight()	);
     bRecording = false;
-ofEnableAlphaBlending();
+    ofEnableAlphaBlending();
 }
 
 void ofApp::videoRecEvent(int key){
@@ -220,14 +227,14 @@ void ofApp::videoRecEvent(int key){
 }
 
 void ofApp::recVideo(){
-    //vidGrabber.update();
-    //if(vidGrabber.isFrameNew() && bRecording){
-    finalFbo.readToPixels(pixels);
-    bool success = vidRecorder.addFrame(pixels);
-    if (!success) {
-        ofLogWarning("This frame was not added!");
+    if(bRecording){
+        ofPixels pixels; // this is used to store the pixels read from the fbo
+        finalFbo.readToPixels(pixels);
+        bool success = vidRecorder.addFrame(pixels);
+        if (!success) {
+            ofLogWarning("This frame was not added!");
+        }
     }
-    //}
 
     // Check if the video recorder encountered any error while writing video frame or audio smaples.
     if (vidRecorder.hasVideoError()) {

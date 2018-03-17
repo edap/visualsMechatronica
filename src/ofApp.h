@@ -48,7 +48,6 @@ private:
     string fileName;
     string fileExt;
     bool bRecording;
-    ofPixels pixels; // this is used to store the pixels read from the fbo
 
     // Animation Primitives
     ofxAnimationPrimitives::SceneManager SM;
