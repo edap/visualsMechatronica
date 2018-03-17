@@ -3,7 +3,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //ofSetVerticalSync(true);
+    ofSetVerticalSync(true);
     // Audio, play the track and initialize audio analysis
     setupAudio();
 
@@ -29,38 +29,30 @@ void ofApp::setup(){
 
     finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGB);
     finalFbo.begin();
-    ofClear(0, 0, 0, 0);
+    ofClear(255,255,255, 0);
     finalFbo.end();
 
     setupVideoRecording();
 }
 
-//--------------------------------------------------------------
 void ofApp::update(){
     ofxGlobalContext::Manager::defaultManager().update();
     SM.update();
 
     finalFbo.begin();
     ofClear(0, 0, 0, 255);
-
     SM.draw();
-    //this line
     finalFbo.end();
 }
 
-//--------------------------------------------------------------
 void ofApp::draw(){
-    // fullfill the FBO
-
     recVideo();
 
-    // draw the FBO
     ofSetColor(255);
     finalFbo.draw(0, 0);
 
     if (drawGui) $Context(Panel)->draw();
 }
-
 
 void ofApp::audioOut(ofSoundBuffer &buffer){
     if (audioDisabled) { return; };
@@ -183,34 +175,26 @@ void ofApp::init_context(){
 
 void ofApp::setupVideoRecording(){
     ofSetFrameRate(60);
-    ofSetLogLevel(OF_LOG_VERBOSE);
+    //ofSetLogLevel(OF_LOG_VERBOSE);
 
     fileName = "testMovie";
-    fileExt = ".mp4";
+    fileExt = ".mov"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
 
-    // override the default codecs if you like
-    // run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
-
-    vidRecorder.setVideoCodec("mpeg4");
-    vidRecorder.setVideoBitrate("900k");
-    //vidRecorder.setAudioCodec("mp3");
-    //vidRecorder.setAudioBitrate("192k");
+    vidRecorder.setVideoCodec("libx264");
+    vidRecorder.setVideoBitrate("5000k");
+    //vidRecorder.setVideoBitrate("20M");
 
     ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
+
     bRecording = false;
     ofEnableAlphaBlending();
 }
 
 void ofApp::videoRecEvent(int key){
-    if (key==43) {
+    if(key==43){
         bRecording = !bRecording;
         if(bRecording && !vidRecorder.isInitialized()) {
-            //vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 30, sampleRate, 2);
-            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 30); // no audio
-//            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, 0,0,0, sampleRate, channels); // no video
-//          vidRecorder.setupCustomOutput(vidGrabber.getWidth(), vidGrabber.getHeight(), 30, sampleRate, channels, "-vcodec mpeg4 -b 1600k -acodec mp2 -ab 128k -f mpegts udp://localhost:1234"); // for custom ffmpeg output string (streaming, etc)
-
-            // Start recording
+            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60); // no audio
             vidRecorder.start();
         }
         else if(!bRecording && vidRecorder.isInitialized()) {
@@ -228,7 +212,7 @@ void ofApp::videoRecEvent(int key){
 
 void ofApp::recVideo(){
     if(bRecording){
-        ofPixels pixels; // this is used to store the pixels read from the fbo
+        ofPixels pixels;
         finalFbo.readToPixels(pixels);
         bool success = vidRecorder.addFrame(pixels);
         if (!success) {
