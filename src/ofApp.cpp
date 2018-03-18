@@ -32,7 +32,9 @@ void ofApp::setup(){
     ofClear(255,255,255, 0);
     finalFbo.end();
 
-    setupVideoRecording();
+    //setup video and audio recording();
+    recorder.setup(sampleRate, 60, 2);
+    ofEnableAlphaBlending();
 }
 
 void ofApp::update(){
@@ -43,11 +45,11 @@ void ofApp::update(){
     ofClear(0, 0, 0, 255);
     SM.draw();
     finalFbo.end();
+
+    recorder.recVideo(finalFbo);
 }
 
 void ofApp::draw(){
-    recVideo();
-
     ofSetColor(255);
     finalFbo.draw(0, 0);
 
@@ -57,9 +59,7 @@ void ofApp::draw(){
 void ofApp::audioOut(float * output, int bufferSize, int nChannels){
     if (audioDisabled) { return; };
 
-
     for (unsigned i = 0 ; i< bufferSize; i++) {
-        //currentSample = (env.adsr(osc.sinewave(frequency + mod.sinewave(1)*440),env.trigger))/2;
         currentSample = sample.play();
         if (fft.process(currentSample)) {
             oct.calculate(fft.magnitudes);
@@ -67,14 +67,9 @@ void ofApp::audioOut(float * output, int bufferSize, int nChannels){
         mix.stereo(currentSample, outputs, 0.5);
         output[i*nChannels] = outputs[0];
         output[i*nChannels+1] = outputs[1];
-
-        cout << bufferSize << endl;
-        cout << nChannels << endl;
-
     }
-    if (bRecording) {
-       vidRecorder.addAudioSamples(output, bufferSize, nChannels);
-    }
+
+    recorder.recAudio(output, bufferSize, nChannels);
 }
 
 
@@ -107,7 +102,7 @@ void ofApp::keyPressed(int key){
     cout << key << endl;
     switchScene(key);
     switchBand(key);
-    videoRecEvent(key);
+
     if(key == 'g') drawGui = !drawGui;
 }
 
@@ -180,68 +175,4 @@ void ofApp::init_context(){
     ofxGlobalContext::Manager::defaultManager().createContext<AppTime>();
     ofxGlobalContext::Manager::defaultManager().createContext<Panel>();
     ofxGlobalContext::Manager::defaultManager().createContext<AudioAnalysis>(oct);
-}
-
-void ofApp::setupVideoRecording(){
-    fileName = "testMovie";
-    fileExt = ".mov"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
-
-    vidRecorder.setVideoCodec("libx264");
-    vidRecorder.setVideoBitrate("5000k");
-    //vidRecorder.setVideoBitrate("20M");
-
-    ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
-
-    bRecording = false;
-    ofEnableAlphaBlending();
-}
-
-void ofApp::videoRecEvent(int key){
-    if(key==43){
-        bRecording = !bRecording;
-        if(bRecording && !vidRecorder.isInitialized()) {
-            //vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60); // no audio
-            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60, sampleRate, 2);
-            vidRecorder.start();
-        }
-        else if(!bRecording && vidRecorder.isInitialized()) {
-            vidRecorder.setPaused(true);
-        }
-        else if(bRecording && vidRecorder.isInitialized()) {
-            vidRecorder.setPaused(false);
-        }
-    }
-    if (key==45) {
-        bRecording = false;
-        vidRecorder.close();
-    }
-}
-
-void ofApp::recVideo(){
-    if(bRecording){
-        ofPixels pixels;
-        finalFbo.readToPixels(pixels);
-        bool success = vidRecorder.addFrame(pixels);
-        if (!success) {
-            ofLogWarning("This frame was not added!");
-        }
-    }
-
-    // Check if the video recorder encountered any error while writing video frame or audio smaples.
-    if (vidRecorder.hasVideoError()) {
-        ofLogWarning("The video recorder failed to write some frames!");
-    }
-
-    if (vidRecorder.hasAudioError()) {
-        ofLogWarning("The video recorder failed to write some audio samples!");
-    }
-}
-
-void ofApp::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
-    cout << "The recoded video file is now complete." << endl;
-}
-
-void ofApp::exit(){
-    ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
-    vidRecorder.close();
 }

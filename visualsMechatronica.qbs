@@ -25,6 +25,8 @@ Project{
             "bin/data/shaders_gl3/raymarching/multistructure2.frag",
             "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",
+            "src/Recorder.cpp",
+            "src/Recorder.h",
             "src/Scenes.h",
             "src/context/AppTime.cpp",
             "src/context/AppTime.h",

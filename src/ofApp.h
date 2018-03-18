@@ -9,6 +9,8 @@
 #include "context/AppTime.h"
 #include "context/AudioAnalysis.h"
 #include "context/Panel.h"
+//Video and Audio Recorder
+#include "Recorder.h"
 
 class ofApp : public ofBaseApp{
 
@@ -16,7 +18,6 @@ public:
     void setup();
     void update();
     void draw();
-    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -40,14 +41,7 @@ private:
     void switchBand(int key);
 
     // Video recording
-    void setupVideoRecording();
-    void videoRecEvent(int key);
-    void recVideo();
-
-    ofxVideoRecorder vidRecorder;
-    string fileName;
-    string fileExt;
-    bool bRecording;
+    Recorder recorder;
 
     // Animation Primitives
     ofxAnimationPrimitives::SceneManager SM;
