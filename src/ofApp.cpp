@@ -54,8 +54,10 @@ void ofApp::draw(){
     if (drawGui) $Context(Panel)->draw();
 }
 
-void ofApp::audioOut(ofSoundBuffer &buffer){
+void ofApp::audioOut(float * output, int bufferSize, int nChannels){
     if (audioDisabled) { return; };
+
+
     for (unsigned i = 0 ; i< bufferSize; i++) {
         //currentSample = (env.adsr(osc.sinewave(frequency + mod.sinewave(1)*440),env.trigger))/2;
         currentSample = sample.play();
@@ -63,8 +65,15 @@ void ofApp::audioOut(ofSoundBuffer &buffer){
             oct.calculate(fft.magnitudes);
         }
         mix.stereo(currentSample, outputs, 0.5);
-        buffer[i*buffer.getNumChannels()] = outputs[0];
-        buffer[i*buffer.getNumChannels()+1] = outputs[1];
+        output[i*nChannels] = outputs[0];
+        output[i*nChannels+1] = outputs[1];
+
+        cout << bufferSize << endl;
+        cout << nChannels << endl;
+
+    }
+    if (bRecording) {
+       vidRecorder.addAudioSamples(output, bufferSize, nChannels);
     }
 }
 
@@ -174,9 +183,6 @@ void ofApp::init_context(){
 }
 
 void ofApp::setupVideoRecording(){
-    ofSetFrameRate(60);
-    //ofSetLogLevel(OF_LOG_VERBOSE);
-
     fileName = "testMovie";
     fileExt = ".mov"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
 
@@ -194,7 +200,8 @@ void ofApp::videoRecEvent(int key){
     if(key==43){
         bRecording = !bRecording;
         if(bRecording && !vidRecorder.isInitialized()) {
-            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60); // no audio
+            //vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60); // no audio
+            vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, ofGetWidth(), ofGetHeight(), 60, sampleRate, 2);
             vidRecorder.start();
         }
         else if(!bRecording && vidRecorder.isInitialized()) {

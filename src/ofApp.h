@@ -29,7 +29,7 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    void audioOut(ofSoundBuffer &buffer);
+    void audioOut(float * output, int bufferSize, int nChannels);
     void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
 
 private:
