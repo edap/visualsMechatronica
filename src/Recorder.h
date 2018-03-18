@@ -7,7 +7,7 @@ public:
     Recorder();
 
     // Video recording
-    void setup(unsigned sampleRate, unsigned fps, unsigned nChannels);
+    void setup(int sampleRate, int fps, int nChannels);
     void recVideo(const ofFbo& finalFbo);
     void recAudio(float * output, int bufferSize, int nChannels);
     //events
@@ -15,9 +15,9 @@ public:
     void videoRecEvent(ofKeyEventArgs& key);
     void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
 
-    unsigned sampleRate;
-    unsigned fps;
-    unsigned nChannels;
+    int sampleRate;
+    int fps;
+    int nChannels;
 
     ofxVideoRecorder vidRecorder;
     string fileName;

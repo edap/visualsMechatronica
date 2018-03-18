@@ -9,7 +9,7 @@ Recorder::Recorder(){
     vidRecorder.setVideoBitrate("5000k"); // try 20M to have high res, but slower performances
 }
 
-void Recorder::setup(unsigned _sampleRate, unsigned _fps, unsigned _nChannels){
+void Recorder::setup(int _sampleRate, int _fps, int _nChannels){
     sampleRate = _sampleRate;
     fps = _fps;
     nChannels = _nChannels;
@@ -75,5 +75,8 @@ void Recorder::recAudio(float * output, int bufferSize, int nChannels){
 
 void Recorder::exit(ofEventArgs& args){
     ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &Recorder::recordingComplete);
+    ofRemoveListener(ofEvents().exit, this, &Recorder::exit);
+    ofRemoveListener(ofEvents().keyPressed, this, &Recorder::videoRecEvent);
+
     vidRecorder.close();
 }
