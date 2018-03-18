@@ -1,8 +1,8 @@
 #include "Deformed1.h"
 
 void Deformed1::loadAssets(){
-    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blending_rings.frag", "");
-    image0.load("textures/fischers-lovebird/fischers-lovebird-big.jpg");
+    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/inside_rings.frag", "");
+    image0.load("textures/budgeridgar/5.jpg");
 }
 
 void Deformed1::setUniforms(){

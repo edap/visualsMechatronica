@@ -2,7 +2,7 @@
 
 void Deformed3::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blending_rings.frag", "");
-    image0.load("textures/fischers-lovebird/fischers-lovebird-big.jpg");
+    image0.load("textures/eastern-rosella/eastern-rosella-det.jpg");
 }
 
 void Deformed3::setUniforms(){

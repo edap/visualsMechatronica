@@ -1,8 +1,8 @@
 #include "Multistructure3.h"
 
 void Multistructure3::loadAssets(){
-    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/Multistructure3.frag", "");
-    image4.load("textures/fischers-lovebird/fischers-lovebird3.jpg");
+    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/multistructure3.frag", "");
+    image4.load("textures/eastern-rosella/eastern-rosella.jpg");
 }
 
 void Multistructure3::setUniforms(){
