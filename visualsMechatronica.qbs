@@ -14,6 +14,7 @@ Project{
         files: [
             "bin/data/shaders_gl3/libs/mercury.glsl",
             "bin/data/shaders_gl3/passthruogh.vert",
+            "bin/data/shaders_gl3/raymarching/bend_five_rings.frag",
             "bin/data/shaders_gl3/raymarching/blending_boh.frag",
             "bin/data/shaders_gl3/raymarching/blending_rings.frag",
             "bin/data/shaders_gl3/raymarching/blobby.frag",

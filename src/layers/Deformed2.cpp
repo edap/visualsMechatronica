@@ -1,7 +1,7 @@
 #include "Deformed2.h"
 
 void Deformed2::loadAssets(){
-    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/blending_rings.frag", "");
+    shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/bend_five_rings.frag", "");
     image0.load("textures/eastern-rosella/eastern-rosella.jpg");
 }
 
