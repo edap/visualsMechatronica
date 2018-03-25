@@ -664,7 +664,7 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 
-uniform sampler2D tex0;
+uniform sampler2D tex4;
 uniform vec2 resolution;
 uniform float beat;
 uniform float iGlobalTime;
@@ -696,30 +696,19 @@ vec2 rotate(vec2 pos, float angle){
 }
 
 float map(vec3 pos){
-    pos.y += 1.5;
+    //pos.y += 0.9;
+    //pos.z -= (iGlobalTime*4.);
+    //pMod3(pos, vec3(3.1, 3.1, 3.));
+    //pMod2(pos.xy, vec2(3.1, 3.1));
 
-    float freq = .1;
-    float time = iGlobalTime*freq;
-    float grid = 4.;
-    float mov = grid*2.;
-    if( fract(time)>0.5 ){
-        pos.z -= fract(time) * mov;
-    } else {
-//        if (fract( pos.z) > 0.5){
-//            pos.x += fract(time) *mov;
-//        } else {
-//            pos.x -= fract(time) * mov;
-//        }
-        pos.x -= fract(time) * mov;
-
-    }
-
-    pMod3(pos, vec3(grid, grid, grid));
+    pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*.7);
+    //pos.yz = rotate(pos.yz, cos(iGlobalTime*0.8)*.7);
     float sdfOpRadius = 0.854;
-
     float blob = fBlob(pos);
-    float oct = fOctahedron(pos,  sdf2);
-    return fOpDifferenceRound(blob,oct,sdfOpRadius);
+    //float torus = fTorus(pos, 0.3, sdf2);
+    //float icos = fIcosahedron(pos, (sdf2-0.2)*3.5);
+    float icos = fIcosahedron(pos, clamp(sdf2, .79, 1.0));
+    return fOpDifferenceRound(blob,icos,sdfOpRadius);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -772,7 +761,7 @@ float fresnel(vec3 normal, vec3 dir){
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    vec4 color = texture(tex0, (0.5 * (r.xy) + .5));
+    vec4 color = texture(tex4, (0.5 * (r.xy) + .5));
     return color.xyz;
 }
 
@@ -816,20 +805,17 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
-    //vec3 eye = vec3(-1.8, -2.5, 19);
-    vec3 eye = vec3(0., -1.5, 14.5);
+    vec3 eye = vec3(x, -2.5, 19);
 
-    //vec3 ta = vec3( -0.5, -0.9, 0.5 );
-    vec3 ta = vec3( -0.0, -1.0, 0. );
+    vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 3.0;
+    float fov = 9.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
     vec3 bgColor = vec3(0.0, 0.0, 0.0);
-    //vec3 bgColor = vec3(1.0, 0.2, 0.5);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );

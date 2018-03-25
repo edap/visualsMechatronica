@@ -22,6 +22,7 @@ Project{
             "bin/data/shaders_gl3/raymarching/cup.frag",
             "bin/data/shaders_gl3/raymarching/inside_rings.frag",
             "bin/data/shaders_gl3/raymarching/mercury_models.frag",
+            "bin/data/shaders_gl3/raymarching/multimaterial.frag",
             "bin/data/shaders_gl3/raymarching/multistructure.frag",
             "bin/data/shaders_gl3/raymarching/multistructure1.frag",
             "bin/data/shaders_gl3/raymarching/multistructure2.frag",

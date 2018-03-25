@@ -14,4 +14,6 @@ public:
 
 private:
     ofImage image0;
+    ofImage image1;
+    ofImage image2;
 };
