@@ -53,30 +53,15 @@ float map(vec3 pos){
     float freqOnYZ = .1;
     float freqOnXZ = .4;
 
-    //pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-        //pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
-    //pos.yz = rotate(pos.yz, PI/2.0);
-    //pos.yz = rotate(pos.yz, PI/2.0);
-    //pos.yx = rotate(pos.yx, PI/1.1);
     pos.yz = rotate(pos.yz, PI/1.4);
     pos.xy = rotate(pos.xy, PI/1.3);
 
     float yOscFreq = 0.2;
-    //vec3 s3pos = vec3(0.,    cos(iGlobalTime*(yOscFreq*2.)+11.) * 0.56,  sin(iGlobalTime*.12) * -2.2) * 1.2;
-    //vec3 s4pos = vec3(2.55,  sin(iGlobalTime*(yOscFreq*2.)+2.) * 0.81,   cos(iGlobalTime*.3) * 0.4)   * 1.5;
-    //vec3 s5pos = vec3(-2.55, cos(iGlobalTime*(yOscFreq*4.)) * 0.73,      sin(iGlobalTime*.76) * 0.4)  * 1.7;
-
-
-
-    //vec3 s6pos = vec3(0.5, 0.5, -1.1);
     vec3 s6pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 0.9, -1.1);
     vec3 s5pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 1.8, -1.1);
-    //vec3 s5pos = vec3(0.5, 0.5, -1.1);
-    //vec3 s4pos = vec3(0.5, 0.5, -1.1);
     vec3 s4pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 2.9, -1.1);
     vec3 s3pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 3.9, -1.1);
     vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*9.)) * 4.4, -1.1);
-    //vec3 s3pos = vec3(0.5, 0.5, -1.1);
 
     float sRadius = 5.5;
     float s2 = bendTorus(pos - s2pos,vec2(sRadius-3.8, 0.7));
@@ -84,8 +69,7 @@ float map(vec3 pos){
     float s4 = bendTorus(pos - s4pos,vec2(sRadius-2.3, 0.4));
     float s5 = bendTorus(pos - s5pos,vec2(sRadius-1.3, 0.5));
     float s6 = bendTorus(pos - s6pos,vec2(sRadius, 0.6));
-    //return smins(s5, smins(s4, smins(s3, s6)));
-    //return s5;
+
     return smins(s6, smins(s5, smins(s4, smins(s3, s2))));
 }
 

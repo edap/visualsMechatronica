@@ -30,27 +30,27 @@ void MercuryModels::setUniforms(){
     cout << model << endl;
     cout << "model" << endl;
     if (model == 0){
-        sdfOp = 11;
-        sdfSolidId1 = 2;
-        sdfSolidId2 =5;
-        solid2Pos = glm::vec3(0.,0.,0.);
-
-        sdf1 = 0.345;
-        sdf2 = 0.555;
-        //sdfOpRadius = 0.6 * beat;
-        sdfOpRadius = 0.6;
-        sdfOpStairs = 7.6;
+        sdf1 = $Context(Panel)->sdf1;
+        sdf2 = $Context(Panel)->sdf2;
+        sdfOp = $Context(Panel)->sdfOp;
+        sdfSolidId1 = $Context(Panel)->sdfSolidId1;
+        sdfSolidId2 = $Context(Panel)->sdfSolidId2;
+        solid2Pos = $Context(Panel)->sdfSolid2Pos;
+        //float b = $Context(AudioAnalysis)->smoothBand(6) * $Context(Panel)->audioMag;
+        //cout << b << endl;
+        sdfOpRadius = $Context(Panel)->sdfOpRadius;
+        sdfOpStairs = $Context(Panel)->sdfOpStairs;
     }else if (model == 1){
-        sdfOp = 11;
+        sdfOp = 17;
         sdfSolidId1 = 2;
-        sdfSolidId2 =5;
-        solid2Pos = glm::vec3(0.,0.,0.);
+        sdfSolidId2 = 2;
+        solid2Pos = glm::vec3(1.,0.,0.);
 
         sdf1 = 0.345;
-        sdf2 = 0.555;
+        sdf2 = 0.58;
         //sdfOpRadius = 0.6 * beat;
-        sdfOpRadius = 0.6;
-        sdfOpStairs = 7.6;
+        sdfOpRadius = 2.0;
+        sdfOpStairs = 30.6;
     }else if(model == 2){
         sdfOp = 11;
         sdfSolidId1 = 2;
@@ -148,19 +148,61 @@ void MercuryModels::setUniforms(){
             sdf2 = 0.825;
             sdfOpRadius = 0.8;
             sdfOpStairs = 4.;
-    }
+    } else if (model == 11) {
+        sdfOp = 11;
+        sdfSolidId1 = 2;
+        sdfSolidId2 =5;
+        solid2Pos = glm::vec3(0.,0.,0.);
 
-    else{
-        sdf1 = $Context(Panel)->sdf1;
-        sdf2 = $Context(Panel)->sdf2;
-        sdfOp = $Context(Panel)->sdfOp;
-        sdfSolidId1 = $Context(Panel)->sdfSolidId1;
-        sdfSolidId2 = $Context(Panel)->sdfSolidId2;
-        solid2Pos = $Context(Panel)->sdfSolid2Pos;
-        //float b = $Context(AudioAnalysis)->smoothBand(6) * $Context(Panel)->audioMag;
-        //cout << b << endl;
-        sdfOpRadius = $Context(Panel)->sdfOpRadius;
-        sdfOpStairs = $Context(Panel)->sdfOpStairs;
+        sdf1 = 0.345;
+        sdf2 = 0.555;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.6;
+        sdfOpStairs = 7.6;
+    } else if (model == 12) {
+        sdfOp = 14;
+        sdfSolidId1 = 2;
+        sdfSolidId2 =7;
+        solid2Pos = glm::vec3(0.,0.,0.);
+
+        sdf1 = 0.345;
+        sdf2 = 0.555;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.6;
+        sdfOpStairs = 7.6;
+    } else if (model == 13) {
+        sdfOp = 14;
+        sdfSolidId1 = 2;
+        sdfSolidId2 =3;
+        solid2Pos = glm::vec3(0.,0.,0.);
+
+        sdf1 = 0.345;
+        sdf2 = 0.555;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.6;
+        sdfOpStairs = 7.6;
+    } else if (model == 14) {
+        sdfOp = 5;
+        sdfSolidId1 = 2;
+        sdfSolidId2 = 4;
+        solid2Pos = glm::vec3(0.,0.,0.);
+
+        sdf1 = 0.345;
+        sdf2 = 0.78;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.845;
+        sdfOpStairs = 7.6;
+    } else if (model == 15) {
+        sdfOp = 9;
+        sdfSolidId1 = 2;
+        sdfSolidId2 = 5;
+        solid2Pos = glm::vec3(2.,0.,0.);
+
+        sdf1 = 0.345;
+        sdf2 = 0.58;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.845;
+        sdfOpStairs = 30.6;
     }
 
 

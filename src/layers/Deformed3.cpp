@@ -2,9 +2,9 @@
 
 void Deformed3::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/multimaterial.frag", "");
-    image0.load("textures/eastern-rosella/eastern-rosella-det.jpg");
+    image0.load("textures/eastern-rosella/eastern-rosella.jpg");
     image1.load("textures/fischers-lovebird/fischers-lovebird3.jpg");
-    image2.load("textures/budgeridgar/5a.jpg");
+    image2.load("textures/budgeridgar/5.jpg");
 }
 
 void Deformed3::setUniforms(){

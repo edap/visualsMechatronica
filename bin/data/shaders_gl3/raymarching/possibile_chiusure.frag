@@ -696,10 +696,6 @@ float smins( float a, float b ){
     return smin(a, b, 3.0);
 }
 
-float opScaleBlob( vec3 p, float s ){
-    return fBlob(p/s)*s;
-}
-
 vec2 sminsMat(vec2 a, vec2 b){
     float d = smins(a.x, b.x);
     vec2 aMat = vec2(d, a.y);
@@ -716,7 +712,7 @@ float sdTorus( vec3 p, vec2 t ){
     return length(q)-t.y;
 }
 
-float bendTorusOld( vec3 p, vec2 dim ){
+float bendTorus( vec3 p, vec2 dim ){
     //float wave = sin(iGlobalTime * 0.2) * 2.2;
     float wave = 0.6;
     float amp = 1.1;
@@ -724,14 +720,8 @@ float bendTorusOld( vec3 p, vec2 dim ){
     float s = sin(wave*p.y) * amp;
     mat2  m = mat2(c,-s,s,c);
     vec3  q = vec3(m*p.xy,p.z);
-    //return sdTorus(q, dim);
-    return sdTorus(p, dim);
-}
-
-float bendTorus( vec3 p, vec4 dim ){
-    float blob = opScaleBlob(p, (dim.x));
-    float capsule = fCapsule(p, dim.y, dim.w);
-    return fOpDifferenceRound(blob,capsule,dim.z);
+    return sdTorus(q, dim);
+    //return sdTorus(p, dim);
 }
 
 vec2 map(vec3 pos){
@@ -741,18 +731,18 @@ vec2 map(vec3 pos){
     pos.yz = rotate(pos.yz, PI/1.4);
     pos.xy = rotate(pos.xy, PI/1.3);
 
-    vec3 s6pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*2.)) * 1.3, -1.1);
-    vec3 s5pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 4.4, -1.1);
+    vec3 s6pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 0.9, -1.1);
+    vec3 s5pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 1.8, -1.1);
     vec3 s4pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 2.9, -1.1);
-    vec3 s3pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 6.9, -1.1);
-    vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*9.)) * 9.4, -1.1);
+    vec3 s3pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 3.9, -1.1);
+    vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*9.)) * 4.4, -1.1);
 
-    float sRadius = 4.5;
-    float s2 = bendTorus(pos - s2pos,vec4(1.9, 1.9, 0.8, 0.5));
-    float s3 = bendTorus(pos - s3pos,vec4(2.3, 2.4, 0.9, .9));
-    float s4 = bendTorus(pos - s4pos,vec4(3.1, 3.2, 0.845, 2.2));
-    float s5 = bendTorus(pos - s5pos,vec4(4.2, 4.8, 0.97, 2.2));
-    float s6 = bendTorus(pos - s6pos,vec4(5.6, 7.0, 0.3, 4.1));
+    float sRadius = 5.5;
+    float s2 = bendTorus(pos - s2pos,vec2(sRadius-3.8, 0.7));
+    float s3 = bendTorus(pos - s3pos,vec2(sRadius-3.1, 0.3));
+    float s4 = bendTorus(pos - s4pos,vec2(sRadius-2.3, 0.4));
+    float s5 = bendTorus(pos - s5pos,vec2(sRadius-1.3, 0.5));
+    float s6 = bendTorus(pos - s6pos,vec2(sRadius, 0.6));
 
     vec2 s2M = vec2(s2, 0.2);
     vec2 s3M = vec2(s3, 0.3);
@@ -761,13 +751,6 @@ vec2 map(vec3 pos){
     vec2 s6M = vec2(s6, 0.3);
 
     return sminsMat(s6M, sminsMat(s5M, sminsMat(s4M, sminsMat(s3M, s2M))));
-    //return s6M;
-
-    //return sminsMat(s2M, s3M);
-    //return sminsMat(s6M, s5M);
-    //return sminsMat(s6M,sminsMat(s5M, s4M));
-    //return sminsMat(s4M,sminsMat(s3M, s2M));
-    //return sminsMat(s3M, s2M);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
