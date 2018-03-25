@@ -17,6 +17,7 @@ Project{
             "bin/data/shaders_gl3/raymarching/bend_five_rings.frag",
             "bin/data/shaders_gl3/raymarching/blending_boh.frag",
             "bin/data/shaders_gl3/raymarching/blending_rings.frag",
+            "bin/data/shaders_gl3/raymarching/blob_stairs.frag",
             "bin/data/shaders_gl3/raymarching/blobby.frag",
             "bin/data/shaders_gl3/raymarching/blobby_old_light.frag",
             "bin/data/shaders_gl3/raymarching/cup.frag",

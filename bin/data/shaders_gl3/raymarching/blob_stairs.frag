@@ -1,6 +1,7 @@
 #version 150
 //#pragma include "../libs/mercury.glsl"
 
+
 #define PI 3.14159265
 #define TAU (2*PI)
 #define PHI (sqrt(5)*0.5 + 0.5)
@@ -110,6 +111,7 @@ float fBox2(vec2 p, vec2 b) {
         vec2 d = abs(p) - b;
         return length(max(d, vec2(0))) + vmax(min(d, vec2(0)));
 }
+
 
 // Endless "corner"
 float fCorner (vec2 p) {
@@ -300,6 +302,7 @@ float fTruncatedOctahedron(vec3 p, float r) {
 float fTruncatedIcosahedron(vec3 p, float r) {
         return fGDF(p, r, 3, 18);
 }
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -624,6 +627,7 @@ float fOpDifferenceStairs(float a, float b, float r, float n) {
         return -fOpUnionStairs(-a, b, r, n);
 }
 
+
 // Similar to fOpUnionRound, but more lipschitz-y at acute angles
 // (and less so at 90 degrees). Useful when fudging around too much
 // by MediaMolecule, from Alex Evans' siggraph slides
@@ -665,11 +669,29 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 
+
+
+
+
+
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 uniform sampler2D tex2;
+uniform sampler2D tex3;
+uniform sampler2D tex4;
+uniform sampler2D tex5;
+uniform sampler2D tex6;
+
 uniform vec2 resolution;
 uniform float iGlobalTime;
+uniform float sdf1;
+uniform float sdf2;
+uniform int sdfOp;
+uniform float sdfOpRadius;
+uniform float sdfOpStairs;
+uniform int sdfSolidId1;
+uniform int sdfSolidId2;
+uniform vec3 solid2Pos;
 
 in vec2 vTexCoord;
 out vec4 fragColor;
@@ -678,6 +700,20 @@ const int MAX_MARCHING_STEPS = 64;
 const float EPSILON = 0.0011;
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
+
+
+// noise
+float hash(float n) { return fract(sin(n) * 1e4); }
+
+float noise(float x) {
+        float i = floor(x);
+        float f = fract(x);
+        float u = f * f * (3.0 - 2.0 * f);
+        return mix(hash(i), hash(i + 1.0), u);
+}
+
+
+
 vec3 lightDirection = normalize(vec3(1.0, 0.6, 1.));
 
 vec2 rotate(vec2 pos, float angle){
@@ -696,17 +732,6 @@ float smins( float a, float b ){
     return smin(a, b, 3.0);
 }
 
-float opScaleBlob( vec3 p, float s ){
-    return fBlob(p/s)*s;
-}
-
-vec2 sminsMat(vec2 a, vec2 b){
-    float d = smins(a.x, b.x);
-    vec2 aMat = vec2(d, a.y);
-    vec2 bMat = vec2(d, b.y);
-    return (a.x < b.x) ? aMat: bMat;
-}
-
 float sdfSphere(vec3 pos, float radius){
     return length(pos) - radius;
 }
@@ -716,58 +741,34 @@ float sdTorus( vec3 p, vec2 t ){
     return length(q)-t.y;
 }
 
-float bendTorusOld( vec3 p, vec2 dim ){
-    //float wave = sin(iGlobalTime * 0.2) * 2.2;
-    float wave = 0.6;
-    float amp = 1.1;
-    float c = cos(wave*p.y) * amp;
-    float s = sin(wave*p.y) * amp;
+float bendTorus( vec3 p, vec2 dim ){
+    float wave = sin(iGlobalTime * 0.2) * 2.2;
+    float c = cos(wave*p.y);
+    float s = sin(wave*p.y);
     mat2  m = mat2(c,-s,s,c);
     vec3  q = vec3(m*p.xy,p.z);
-    //return sdTorus(q, dim);
-    return sdTorus(p, dim);
+    return sdTorus(q, dim);
 }
 
-float bendTorus( vec3 p, vec4 dim ){
-    float blob = opScaleBlob(p, (dim.x));
-    float capsule = fCapsule(p, dim.y, dim.w);
-    return fOpDifferenceRound(blob,capsule,dim.z);
-}
-
-vec2 map(vec3 pos){
-    float freqOnYZ = .1;
+float map(vec3 pos){
+    float freqOnYZ = .8;
     float freqOnXZ = .4;
-    float yOscFreq = 0.2;
-    pos.yz = rotate(pos.yz, PI/1.4);
-    pos.xy = rotate(pos.xy, PI/1.3);
 
-    vec3 s6pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*2.)) * 1.3, -1.1);
-    vec3 s5pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 4.4, -1.1);
-    vec3 s4pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 2.9, -1.1);
-    vec3 s3pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 6.9, -1.1);
-    vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*5.)) * 9.4, -1.1);
+    pos.y += 1.0;
+    //pos.xz = rotate(pos.xz, PI/2.);
 
-    float sRadius = 4.5;
-    float s2 = bendTorus(pos - s2pos,vec4(1.9, 1.9, 0.8, 0.5));
-    float s3 = bendTorus(pos - s3pos,vec4(2.3, 2.4, 0.9, .9));
-    float s4 = bendTorus(pos - s4pos,vec4(3.1, 3.2, 0.845, 2.2));
-    float s5 = bendTorus(pos - s5pos,vec4(4.2, 4.8, 0.97, 2.2));
-    float s6 = bendTorus(pos - s6pos,vec4(5.6, 7.0, 0.3, 4.1));
+    float distance = abs(sin(iGlobalTime*0.4) *2.7)/2.;
+    vec3 pos1 = pos;
+    pos1.x -= distance;
+    vec3 pos2 = pos;
+    pos2.x += distance;
 
-    vec2 s2M = vec2(s2, 0.2);
-    vec2 s3M = vec2(s3, 0.3);
-    vec2 s4M = vec2(s4, 0.1);
-    vec2 s5M = vec2(s5, 0.2);
-    vec2 s6M = vec2(s6, 0.1);
-
-    return sminsMat(s6M, sminsMat(s5M, sminsMat(s4M, sminsMat(s3M, s2M))));
-    //return s6M;
-
-    //return sminsMat(s2M, s3M);
-    //return sminsMat(s6M, s5M);
-    //return sminsMat(s6M,sminsMat(s5M, s4M));
-    //return sminsMat(s4M,sminsMat(s3M, s2M));
-    //return sminsMat(s3M, s2M);
+    float blob1 = fBlob(pos1);
+    float blob2 = fBlob(pos2);
+    float nStairs = 10.;
+    float radius = 1.132;
+    //float radius = 1.132;
+    return fOpUnionColumns(blob1, blob2,radius, nStairs);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -776,31 +777,28 @@ vec2 squareFrame(vec2 res, vec2 coord){
     return uv;
 }
 
-vec2 raymarching(vec3 eye, vec3 marchingDirection){
-    // the x value store the depth distance, the y the material
-    vec2 res = vec2(NEAR_CLIP, 0.);
+float raymarching(vec3 eye, vec3 marchingDirection){
+    float depth = NEAR_CLIP;
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
-        vec2 distAndMat = map(eye + res.x * marchingDirection);
-        res.y = distAndMat.y;
-        if (distAndMat.x < EPSILON){
-            return res;
+        float dist = map(eye + depth * marchingDirection);
+        if (dist < EPSILON){
+            return depth;
         }
-        res.x += distAndMat.x;
 
-        if (distAndMat.x >= FAR_CLIP) {
-            res.x = FAR_CLIP;
-            return res;
+        depth += dist;
+
+        if (depth >= FAR_CLIP) {
+            return FAR_CLIP;
         }
     }
-    res.x = FAR_CLIP;
-    return res;
+    return FAR_CLIP;
 }
 
 float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
     float res = 1.0;
     float t = mint;
     for( int i=0; i<16; i++ ) {
-        float h = map( ro + rd*t ).x;
+        float h = map( ro + rd*t );
         res = min( res, 8.0*h/t );
         t += clamp( h, 0.02, 0.10 );
         if( h<0.001 || t>tmax ) break;
@@ -812,10 +810,11 @@ float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
 float ao( in vec3 pos, in vec3 nor ){
     float occ = 0.0;
     float sca = 1.0;
-    for( int i=0; i<5; i++ ){
+    for( int i=0; i<5; i++ )
+    {
         float hr = 0.01 + 0.06*float(i)/4.0;
         vec3 aopos =  nor * hr + pos;
-        float dd = map( aopos ).x;
+        float dd = map( aopos );
         occ += -(dd-hr)*sca;
         sca *= 0.95;
     }
@@ -825,9 +824,9 @@ float ao( in vec3 pos, in vec3 nor ){
 vec3 computeNormal(vec3 pos){
     vec2 eps = vec2(0.01, 0.);
     return normalize(vec3(
-                          map(pos + eps.xyy).x - map(pos - eps.xyy).x,
-                          map(pos + eps.yxy).x - map(pos - eps.yxy).x,
-                          map(pos + eps.yyx).x - map(pos - eps.yyx).x
+                          map(pos + eps.xyy) - map(pos - eps.xyy),
+                          map(pos + eps.yxy) - map(pos - eps.yxy),
+                          map(pos + eps.yyx) - map(pos - eps.yyx)
                           ));
 }
 
@@ -846,28 +845,26 @@ float fresnel(vec3 normal, vec3 dir){
     return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 2.0 );
 }
 
-vec3 getRefTexture(vec3 normal, vec3 dir, float mat) {
+vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    vec4 color;
-    if (mat == 0.1) {
-        color = texture(tex0, (0.5 * (r.xy) + .5));
-    }
-    else if (mat == 0.2) {
-        color = texture(tex1, (0.5 * (r.xy) + .5));
-    }
-    else if (mat == 0.3) {
-        color = texture(tex2, (0.5 * (r.xy) + .5));
-    };
-//color = texture(tex1, (0.5 * (r.xy) + .5));
-    return color.xyz;
+    //tex1.y+= fract(iGlobalTime);
+    vec4 color0 = texture(tex0, (0.5 * (r.xy) + .5));
+    vec4 color1 = texture(tex1, (0.5 * (r.xy) + .5));
+    vec4 color2 = texture(tex2, (0.5 * (r.xy) + .5));
+    vec4 color3 = texture(tex3, (0.5 * (r.xy) + .5));
+    vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
+    vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
+    vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
+
+    return color4.xyz;
 }
 
-vec3 calculateColor(vec3 pos, vec3 dir, float mat){
+vec3 calculateColor(vec3 pos, vec3 dir){
     vec3 normal = computeNormal(pos);
     vec3 color;
 
-    vec3 colTex = getRefTexture(normal, dir, mat);
+    vec3 colTex = getRefTexture(normal, dir);
     float diffLight = diffuse(normal);
     float specLight = specular(normal, dir);
     float fresnelLight = fresnel(normal, dir);
@@ -886,16 +883,14 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.5, 3.0,19.5);
+    vec3 eye = vec3(-1.8, -2.5,19.5);
 
-    vec3 ta = vec3( -0.5, -0.9, 0.5 );
+    vec3 ta = vec3( -0.0, -1., 0. );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 2.8;
+    float fov = 9.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
-    vec2 distanceAndMat = raymarching(eye, dir);
-    float shortestDistanceToScene = distanceAndMat.x;
-    float mat = distanceAndMat.y;
+    float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
     //vec3 bgColor = vec3(0.1, 0.35, 0.75);
@@ -904,7 +899,7 @@ void main(){
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
         float shadow  = softshadow(collision, lightDirection, 0.02, 2.5 );
-        color = calculateColor(collision, dir, mat);
+        color = calculateColor(collision, dir);
 
         shadow = mix(shadow, 1.0, 0.7);
         color = color * shadow;
@@ -914,7 +909,5 @@ void main(){
         color = bgColor;
     }
 
-    //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
-    fragColor = vec4(color, 1.0);
-    //fragColor = vec4(vec3(shortestDistanceToScene) , 1.0);
+    fragColor = vec4(color , 1.0);
 }
