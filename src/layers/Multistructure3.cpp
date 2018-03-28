@@ -9,11 +9,11 @@ void Multistructure3::setUniforms(){
     float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
     //int nBand = $Context(AudioAnalysis)->getBand();
-    float audioMag = $Context(Panel)->audioMag;
-    float smoothVal = $Context(Panel)->audioSmooth;
+    //float audioMag = $Context(Panel)->audioMag;
+    //float smoothVal = $Context(Panel)->audioSmooth;
 
-    //float smoothVal = 0.902;
-    //float audioMag = 0.0175;
+    auto smoothVal = 2.033;
+    auto audioMag = 0.025;
     int nBand = 1;
     float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, smoothVal) * audioMag;
 
@@ -23,6 +23,7 @@ void Multistructure3::setUniforms(){
 
     shader.setUniform1f("iGlobalTime", time);
     shader.setUniform1f("beat", beat);
+    shader.setUniform1f("sdfOpStairs", 4);
     shader.setUniform2fv("resolution", resolution);
     shader.setUniform1f("sdf2", sdf2);
 

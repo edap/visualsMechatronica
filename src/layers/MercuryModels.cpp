@@ -203,6 +203,17 @@ void MercuryModels::setUniforms(){
         //sdfOpRadius = 0.6 * beat;
         sdfOpRadius = 0.845;
         sdfOpStairs = 30.6;
+    } else if (model == 16) {
+        sdfOp = 11;
+        sdfSolidId1 = 2;
+        sdfSolidId2 = 15;
+        solid2Pos = glm::vec3(0.,0.,0.);
+
+        sdf1 = 0.55;
+        sdf2 = 0.66;
+        //sdfOpRadius = 0.6 * beat;
+        sdfOpRadius = 0.698;
+        sdfOpStairs = 2.6;
     }
 
 

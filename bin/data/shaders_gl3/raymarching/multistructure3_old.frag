@@ -671,7 +671,6 @@ uniform float iGlobalTime;
 uniform float sdf2;
 in vec2 vTexCoord;
 out vec4 fragColor;
-uniform float sdfOpStairs;
 
 const int MAX_MARCHING_STEPS = 64;
 const float EPSILON = 0.0001;
@@ -697,23 +696,19 @@ vec2 rotate(vec2 pos, float angle){
 }
 
 float map(vec3 pos){
-    float freq = .2;
-    float time = iGlobalTime*freq;
-    float grid = 4.;
-    float mov = grid*2.;
+    //pos.y += 0.9;
+    //pos.z -= (iGlobalTime*4.);
+    //pMod3(pos, vec3(3.1, 3.1, 3.));
+    //pMod2(pos.xy, vec2(3.1, 3.1));
 
-    if( fract(time)>0.5 ){
-        pos.z -= fract(time) * mov;
-        pos.xy = rotate(pos.xy, fract(time)*PI);
-    } else {
-        pos.x += fract(time) * mov;
-    }
-
-    pMod3(pos, vec3(grid, grid, grid));
-    float sdfOpRadius = clamp((sdf2*0.2), .74, 0.95);
+    pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*.7);
+    //pos.yz = rotate(pos.yz, cos(iGlobalTime*0.8)*.7);
+    float sdfOpRadius = 0.854;
     float blob = fBlob(pos);
-    float oct = fOctahedron(pos, 0.6);
-    return fOpDifferenceColumns(blob,oct,sdfOpRadius , 2);
+    //float torus = fTorus(pos, 0.3, sdf2);
+    //float icos = fIcosahedron(pos, (sdf2-0.2)*3.5);
+    float icos = fIcosahedron(pos, clamp(sdf2, .79, 1.0));
+    return fOpDifferenceRound(blob,icos,sdfOpRadius);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -810,17 +805,14 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
-    //vec3 eye = vec3(-1.8, -2.5, 19);
-    vec3 eye = vec3(0., 0., 14.5);
+    vec3 eye = vec3(x, -2.5, 19);
 
-    //vec3 ta = vec3( -0.5, -0.9, 0.5 );
-    vec3 ta = vec3( -0.0, -1.0, 0. );
+    vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 3.0;
+    float fov = 9.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
-
 
     vec3 color;
     vec3 bgColor = vec3(0.0, 0.0, 0.0);

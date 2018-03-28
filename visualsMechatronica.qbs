@@ -28,6 +28,7 @@ Project{
             "bin/data/shaders_gl3/raymarching/multistructure1.frag",
             "bin/data/shaders_gl3/raymarching/multistructure2.frag",
             "bin/data/shaders_gl3/raymarching/multistructure3.frag",
+            "bin/data/shaders_gl3/raymarching/multistructure3_old.frag",
             "bin/data/shaders_gl3/raymarching/possibile_chiusure.frag",
             "bin/data/shaders_gl3/raymarching/two_spheres.frag",
             "src/Layer.h",
