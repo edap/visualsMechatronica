@@ -808,14 +808,14 @@ void main(){
     //vec3 ta = vec3( -0.5, -0.9, 0.5 );
     vec3 ta = vec3( -0.0, -1.0, 0. );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 20.0;
+    float fov = 25.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    //vec3 bgColor = vec3(0.0, 0.0, 0.0);
-    vec3 bgColor = vec3(1.0, 0.2, 0.5);
+    vec3 bgColor = vec3(0.0, 0.0, 0.0);
+    //vec3 bgColor = vec3(1.0, 0.2, 0.5);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );

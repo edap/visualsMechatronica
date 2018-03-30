@@ -699,7 +699,7 @@ float map(vec3 pos){
     pos.y += 1.5;
 
     float freq = .1;
-    float time = iGlobalTime*freq;
+    float time = (iGlobalTime*freq) * 2.6;
     float grid = 4.;
     float mov = grid*2.;
     if( fract(time)>0.5 ){

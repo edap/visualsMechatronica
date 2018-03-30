@@ -61,11 +61,9 @@ float bendTorusB( vec3 p, vec2 dim ){
 float map(vec3 pos){
     float diam = 2.7;
     float thick = 0.8;
-    float freqOnYZ = .1;
     float freqOnXZ = .4;
 
-    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-        pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
+    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*1.6);
     pos.xy = rotate(pos.xy, PI/2.);
 
     vec3 s2pos = pos - vec3(0., 3.0, 0.);
@@ -102,33 +100,6 @@ float raymarching(vec3 eye, vec3 marchingDirection){
         }
     }
     return FAR_CLIP;
-}
-
-float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
-    float res = 1.0;
-    float t = mint;
-    for( int i=0; i<16; i++ ) {
-        float h = map( ro + rd*t );
-        res = min( res, 8.0*h/t );
-        t += clamp( h, 0.02, 0.10 );
-        if( h<0.001 || t>tmax ) break;
-    }
-    return clamp( res, 0.0, 1.0 );
-}
-
-
-float ao( in vec3 pos, in vec3 nor ){
-    float occ = 0.0;
-    float sca = 1.0;
-    for( int i=0; i<5; i++ )
-    {
-        float hr = 0.01 + 0.06*float(i)/4.0;
-        vec3 aopos =  nor * hr + pos;
-        float dd = map( aopos );
-        occ += -(dd-hr)*sca;
-        sca *= 0.95;
-    }
-    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 );
 }
 
 vec3 computeNormal(vec3 pos){
@@ -170,7 +141,6 @@ vec3 calculateColor(vec3 pos, vec3 dir){
     float diffLight = diffuse(normal);
     float specLight = specular(normal, dir);
     float fresnelLight = fresnel(normal, dir);
-    float ambientOcc = ao(pos, normal);
     color = (diffLight + specLight + fresnelLight) * colTex;
     return colTex;
 }
@@ -185,9 +155,9 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.5, 3.0,19.5);
+    vec3 eye = vec3(0.5, 0.0,19.5);
 
-    vec3 ta = vec3( -0.5, -0.9, 0.5 );
+    vec3 ta = vec3( -0.5, 0.0, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
     float fov = 4.6;
     vec3 dir = camera * normalize(vec3(uv, fov));
@@ -195,17 +165,12 @@ void main(){
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    //vec3 bgColor = vec3(0.1, 0.35, 0.75);
     vec3 bgColor = vec3(0.0, 0.0, 0.0);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
-        float shadow  = softshadow(collision, lightDirection, 0.02, 2.5 );
         color = calculateColor(collision, dir);
-
-        shadow = mix(shadow, 1.0, 0.7);
-        color = color * shadow;
-        float fogFactor = exp(collision.z * 0.04);
+        float fogFactor = exp(collision.z * 0.08);
         color = mix(bgColor, color, fogFactor);
     } else {
         color = bgColor;

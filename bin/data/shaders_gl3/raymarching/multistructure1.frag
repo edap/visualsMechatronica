@@ -697,7 +697,7 @@ vec2 rotate(vec2 pos, float angle){
 
 float map(vec3 pos){
     pos.y += 0.9;
-    //pos.z -= (iGlobalTime*4.);
+    pos.z -= (iGlobalTime*4.)*1.5;
     pMod3(pos, vec3(3.1, 3.1, 10.));
     //pModGrid2(pos.xz, vec2(2.,2.));
     pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*.7);
@@ -805,19 +805,19 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
-    vec3 eye = vec3(-1.8, -2.5, 19);
+    float x = -1.8 + noise(iGlobalTime * 0.9) * 8.8;
+    vec3 eye = vec3(x, -2.5, 19);
 
-    vec3 ta = vec3( -0.5, -0.9, 0.5 );
+    vec3 ta = vec3( -0.9, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 2.0;
+    float fov = 4.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
-    //vec3 bgColor = vec3(0.0, 0.0, 0.0);
-    vec3 bgColor = vec3(1.0, 0.2, 0.5);
+    vec3 bgColor = vec3(0.0, 0.0, 0.0);
+    //vec3 bgColor = vec3(1.0, 0.2, 0.5);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );
