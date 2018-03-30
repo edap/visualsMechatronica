@@ -36,7 +36,7 @@ private:
     ofxAnimationPrimitives::SceneManager SM;
 
     // Audio vars
-    bool          audioDisabled = false;
+    bool audioDisabled = false;
     unsigned startTime, endTime, currentTime;
     int sampleRate = 44100;
     unsigned bufferSize = 512;

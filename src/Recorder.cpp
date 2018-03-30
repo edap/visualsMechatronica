@@ -4,9 +4,9 @@ Recorder::Recorder(){
     fileName = "testMovie";
     // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
     fileExt = ".mov";
-    // see available codecs in ffmpeg with 'ffmpeg -codecs'. In my experience, libx264 leads to better results
-    vidRecorder.setVideoCodec("libx264");
-    vidRecorder.setVideoBitrate("5000k"); // try 20M to have high res, but slower performances
+    // see available codecs in ffmpeg with 'ffmpeg -codecs'. In my experience, h264 leads to better results
+    vidRecorder.setVideoCodec("h264");
+    vidRecorder.setVideoBitrate("20000k"); // try 20M to have high res, but slower performances
 }
 
 void Recorder::setup(int _sampleRate, int _fps, int _nChannels){

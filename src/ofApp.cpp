@@ -38,6 +38,15 @@ void ofApp::setup(){
 }
 
 void ofApp::update(){
+//    cout << ofGetElapsedTimef() << endl;
+//    if(audioDisabled == true){
+//        cout << "dis" << endl;
+//        if (ofGetElapsedTimef() > 5.00){
+//            cout << "en" << endl;
+//            audioDisabled = false;
+//        }
+//    }
+
     ofxGlobalContext::Manager::defaultManager().update();
     SM.update();
 
@@ -58,6 +67,7 @@ void ofApp::draw(){
 
 void ofApp::audioOut(float * output, int bufferSize, int nChannels){
     if (audioDisabled) { return; };
+    if (ofGetElapsedTimef() < 5.00){ return; };
 
     for (unsigned i = 0 ; i< bufferSize; i++) {
         currentSample = sample.play();
