@@ -2,7 +2,7 @@
 
 void Multistructure2::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/multistructure2.frag", "");
-    image.load("textures/eastern-rosella/eastern-rosella-det.jpg");
+    image.load("textures/eastern-rosella/eastern-rosella-det2.jpg");
 }
 
 void Multistructure2::setUniforms(){

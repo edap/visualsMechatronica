@@ -52,5 +52,5 @@ private:
 
     //graphics vars
     ofFbo                 finalFbo;
-    bool                  drawGui = true;
+    bool                  drawGui = false;
 };

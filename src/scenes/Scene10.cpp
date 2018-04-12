@@ -2,7 +2,7 @@
 
 Scene10::Scene10() {
     LM.setup(ofGetWidth(), ofGetHeight());
-    LM.createLayer<Multistructure>(0.3);
+    LM.createLayer<Mensch>(0.3);
 }
 
 void Scene10::update(){

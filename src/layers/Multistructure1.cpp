@@ -2,7 +2,7 @@
 
 void Multistructure1::loadAssets(){
     shader.load("shaders_gl3/passthruogh.vert", "shaders_gl3/raymarching/multistructure1.frag", "");
-    image.load("textures/budgeridgar/5a.jpg");
+    image.load("textures/budgeridgar/5a2.jpg");
 }
 
 void Multistructure1::setUniforms(){

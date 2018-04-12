@@ -741,17 +741,20 @@ vec2 map(vec3 pos){
     pos.yz = rotate(pos.yz, PI/1.4);
     pos.xy = rotate(pos.xy, PI/1.3);
 
+    //pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*1.6);
+    //pos.xy = rotate(pos.xy, PI/2.);
+
     vec3 s6pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*2.)) * 1.3, -1.1);
     vec3 s5pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 4.4, -1.1);
-    vec3 s4pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 2.9, -1.1);
+    vec3 s4pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*4.)) * 3.9, -1.1);
     vec3 s3pos = vec3(0.5, cos(iGlobalTime*(yOscFreq*4.)) * 6.9, -1.1);
-    vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*5.)) * 9.4, -1.1);
+    vec3 s2pos = vec3(0.5, sin(iGlobalTime*(yOscFreq*5.)) * 6.4, -1.1);
 
     float sRadius = 4.5;
     float s2 = bendTorus(pos - s2pos,vec4(1.9, 1.9, 0.8, 0.5));
     float s3 = bendTorus(pos - s3pos,vec4(2.3, 2.4, 0.9, .9));
     float s4 = bendTorus(pos - s4pos,vec4(3.1, 3.2, 0.845, 2.2));
-    float s5 = bendTorus(pos - s5pos,vec4(4.2, 4.8, 0.97, 2.2));
+    float s5 = bendTorus(pos - s5pos,vec4(4.6, 4.8, 0.97, 2.2));
     float s6 = bendTorus(pos - s6pos,vec4(5.6, 7.0, 0.3, 4.1));
 
     vec2 s2M = vec2(s2, 0.2);

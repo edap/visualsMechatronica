@@ -757,7 +757,7 @@ float map(vec3 pos){
     pos.y += 1.0;
     //pos.xz = rotate(pos.xz, PI/2.);
 
-    float distance = abs(sin(iGlobalTime*0.4) *2.7)/2.;
+    float distance = abs(sin(iGlobalTime*0.2) *2.7)/2.;
     vec3 pos1 = pos;
     pos1.x -= distance;
     vec3 pos2 = pos;

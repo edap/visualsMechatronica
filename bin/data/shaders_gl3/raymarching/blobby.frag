@@ -1,141 +1,6 @@
 #version 150
 //#pragma include "../libs/mercury.glsl"
 
-////////////////////////////////////////////////////////////////
-//
-//                           HG_SDF
-//
-//     GLSL LIBRARY FOR BUILDING SIGNED DISTANCE BOUNDS
-//
-//     version 2016-01-10
-//
-//     Check http://mercury.sexy/hg_sdf for updates
-//     and usage examples. Send feedback to spheretracing@mercury.sexy.
-//
-//     Brought to you by MERCURY http://mercury.sexy
-//
-//
-//
-// Released as Creative Commons Attribution-NonCommercial (CC BY-NC)
-//
-////////////////////////////////////////////////////////////////
-//
-// How to use this:
-//
-// 1. Build some system to #include glsl files in each other.
-//   Include this one at the very start. Or just paste everywhere.
-// 2. Build a sphere tracer. See those papers:
-//   * "Sphere Tracing" http://graphics.cs.illinois.edu/sites/default/files/zeno.pdf
-//   * "Enhanced Sphere Tracing" http://lgdv.cs.fau.de/get/2234
-//   The Raymnarching Toolbox Thread on pouet can be helpful as well
-//   http://www.pouet.net/topic.php?which=7931&page=1
-//   and contains links to many more resources.
-// 3. Use the tools in this library to build your distance bound f().
-// 4. ???
-// 5. Win a compo.
-//
-// (6. Buy us a beer or a good vodka or something, if you like.)
-//
-////////////////////////////////////////////////////////////////
-//
-// Table of Contents:
-//
-// * Helper functions and macros
-// * Collection of some primitive objects
-// * Domain Manipulation operators
-// * Object combination operators
-//
-////////////////////////////////////////////////////////////////
-//
-// Why use this?
-//
-// The point of this lib is that everything is structured according
-// to patterns that we ended up using when building geometry.
-// It makes it more easy to write code that is reusable and that somebody
-// else can actually understand. Especially code on Shadertoy (which seems
-// to be what everybody else is looking at for "inspiration") tends to be
-// really ugly. So we were forced to do something about the situation and
-// release this lib ;)
-//
-// Everything in here can probably be done in some better way.
-// Please experiment. We'd love some feedback, especially if you
-// use it in a scene production.
-//
-// The main patterns for building geometry this way are:
-// * Stay Lipschitz continuous. That means: don't have any distance
-//   gradient larger than 1. Try to be as close to 1 as possible -
-//   Distances are euclidean distances, don't fudge around.
-//   Underestimating distances will happen. That's why calling
-//   it a "distance bound" is more correct. Don't ever multiply
-//   distances by some value to "fix" a Lipschitz continuity
-//   violation. The invariant is: each fSomething() function returns
-//   a correct distance bound.
-// * Use very few primitives and combine them as building blocks
-//   using combine opertors that preserve the invariant.
-// * Multiply objects by repeating the domain (space).
-//   If you are using a loop inside your distance function, you are
-//   probably doing it wrong (or you are building boring fractals).
-// * At right-angle intersections between objects, build a new local
-//   coordinate system from the two distances to combine them in
-//   interesting ways.
-// * As usual, there are always times when it is best to not follow
-//   specific patterns.
-//
-////////////////////////////////////////////////////////////////
-//
-// FAQ
-//
-// Q: Why is there no sphere tracing code in this lib?
-// A: Because our system is way too complex and always changing.
-//    This is the constant part. Also we'd like everyone to
-//    explore for themselves.
-//
-// Q: This does not work when I paste it into Shadertoy!!!!
-// A: Yes. It is GLSL, not GLSL ES. We like real OpenGL
-//    because it has way more features and is more likely
-//    to work compared to browser-based WebGL. We recommend
-//    you consider using OpenGL for your productions. Most
-//    of this can be ported easily though.
-//
-// Q: How do I material?
-// A: We recommend something like this:
-//    Write a material ID, the distance and the local coordinate
-//    p into some global variables whenever an object's distance is
-//    smaller than the stored distance. Then, at the end, evaluate
-//    the material to get color, roughness, etc., and do the shading.
-//
-// Q: I found an error. Or I made some function that would fit in
-//    in this lib. Or I have some suggestion.
-// A: Awesome! Drop us a mail at spheretracing@mercury.sexy.
-//
-// Q: Why is this not on github?
-// A: Because we were too lazy. If we get bugged about it enough,
-//    we'll do it.
-//
-// Q: Your license sucks for me.
-// A: Oh. What should we change it to?
-//
-// Q: I have trouble understanding what is going on with my distances.
-// A: Some visualization of the distance field helps. Try drawing a
-//    plane that you can sweep through your scene with some color
-//    representation of the distance field at each point and/or iso
-//    lines at regular intervals. Visualizing the length of the
-//    gradient (or better: how much it deviates from being equal to 1)
-//    is immensely helpful for understanding which parts of the
-//    distance field are broken.
-//
-////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////
-//
-//             HELPER FUNCTIONS/MACROS
-//
-////////////////////////////////////////////////////////////////
 
 #define PI 3.14159265
 #define TAU (2*PI)
@@ -797,43 +662,6 @@ float fOpTongue(float a, float b, float ra, float rb) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 uniform sampler2D tex2;
@@ -841,18 +669,28 @@ uniform sampler2D tex3;
 uniform sampler2D tex4;
 uniform sampler2D tex5;
 uniform sampler2D tex6;
-
 uniform vec2 resolution;
-uniform float iGlobalTime;
 uniform float beat;
-
+uniform float iGlobalTime;
+uniform float sdf2;
 in vec2 vTexCoord;
 out vec4 fragColor;
+uniform float sdfOpStairs;
 
 const int MAX_MARCHING_STEPS = 64;
-const float EPSILON = 0.0011;
+const float EPSILON = 0.0001;
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
+
+
+// noise
+float hash(float n) { return fract(sin(n) * 1e4); }
+float noise(float x) {
+        float i = floor(x);
+        float f = fract(x);
+        float u = f * f * (3.0 - 2.0 * f);
+        return mix(hash(i), hash(i + 1.0), u);
+}
 
 vec3 lightDirection = normalize(vec3(1.0, 0.6, 1.));
 
@@ -862,35 +700,20 @@ vec2 rotate(vec2 pos, float angle){
     return mat2(c, s, -s, c) * pos;
 }
 
-// operations
-float smin( float a, float b, float k ){
-    float res = exp( -k*a ) + exp( -k*b );
-    return -log( res )/k;
-}
-
-float smins( float a, float b ){
-    return smin(a, b, 3.0);
-}
-
 float map(vec3 pos){
-    float freqOnYZ = .1;
-    float freqOnXZ = .4;
+    pos.y += .5;
+    pos.x += 1.;
+    //pos.xz = rotate(pos.xz, sin(iGlobalTime*0.4)*1.6);
+    pos.xz = rotate(pos.xz, PI/2);
+    pos.xy = rotate(pos.xy, PI/4.);
 
-    pos.y += 1.0;
-    pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
-    pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
-
-    //pModPolar(pos.yz, PI * (sin(iGlobalTime) * 0.3) * 4.0);
-    //pMod2(pos.xy, vec2(6., 6.));
-
-
-    return fBlob(pos);
-//    float sRadius = 3.5;
-//    float s3 = bendTorus(pos - s3pos,vec2(sRadius+0.5, 0.5));
-//    float s4 = bendTorus(pos - s4pos,vec2(sRadius-1.2, 0.5));
-//    float s5 = bendTorus(pos - s5pos,vec2(sRadius-1., 0.5));
-//    float s6 = bendTorus(pos,vec2(sRadius-1., 0.5));
-//    return smins(s5, smins(s4, smins(s3, s6)));
+    float fak = sin(iGlobalTime * 4.4) * 1.0;
+    float fa = beat * 0.4;
+    float sdfOpRadius = clamp(1-fa, .75, 0.99);
+    //float sdfOpRadius = sin(iGlobalTime) * 0.9;
+    float blob = fBlob(pos);
+    float oct = fOctahedron(pos, 0.6);
+    return fOpDifferenceColumns(blob,oct,sdfOpRadius ,3);
 }
 
 vec2 squareFrame(vec2 res, vec2 coord){
@@ -916,18 +739,6 @@ float raymarching(vec3 eye, vec3 marchingDirection){
     return FAR_CLIP;
 }
 
-float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
-    float res = 1.0;
-    float t = mint;
-    for( int i=0; i<16; i++ ) {
-        float h = map( ro + rd*t );
-        res = min( res, 8.0*h/t );
-        t += clamp( h, 0.02, 0.10 );
-        if( h<0.001 || t>tmax ) break;
-    }
-    return clamp( res, 0.0, 1.0 );
-}
-
 vec3 computeNormal(vec3 pos){
     vec2 eps = vec2(0.01, 0.);
     return normalize(vec3(
@@ -935,6 +746,21 @@ vec3 computeNormal(vec3 pos){
                           map(pos + eps.yxy) - map(pos - eps.yxy),
                           map(pos + eps.yyx) - map(pos - eps.yyx)
                           ));
+}
+
+float diffuse(vec3 normal){
+    float ambient = 0.5;
+    return clamp( dot(normal, lightDirection) * ambient + ambient, 0.0, 1.0 );
+}
+
+float specular(vec3 normal, vec3 dir){
+    vec3 h = normalize(normal - dir);
+    float specularityCoef = 100.;
+    return clamp( pow(max(dot(h, normal), 0.), specularityCoef), 0.0, 1.0);
+}
+
+float fresnel(vec3 normal, vec3 dir){
+    return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 2.0 );
 }
 
 vec3 getRefTexture(vec3 normal, vec3 dir) {
@@ -947,26 +773,37 @@ vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec4 color4 = texture(tex4, (0.5 * (r.xy) + .5));
     vec4 color5 = texture(tex5, (0.5 * (r.xy) + .5));
     vec4 color6 = texture(tex6, (0.5 * (r.xy) + .5));
-    return color6.xyz;
+    return color0.xyz;
 }
 
+vec3 calculateColor(vec3 pos, vec3 dir){
+    vec3 normal = computeNormal(pos);
+    vec3 color;
+
+    vec3 colTex = getRefTexture(normal, dir);
+    float diffLight = diffuse(normal);
+    float specLight = specular(normal, dir);
+    float fresnelLight = fresnel(normal, dir);
+    color = (diffLight + specLight + fresnelLight) * colTex;
+    return color;
+}
 
 vec3 calculateColor2(vec3 pos, vec3 dir){
   //light via https://vimeo.com/124721382
   vec3 nor = computeNormal(pos);
 
-  vec3 lig = normalize(vec3(1.,1.,1.));
-  //vec3 lig = normalize(vec3(1.,sin(iGlobalTime*5.)*3.+.5, 1.));
+  vec3 lig = normalize(vec3(1.,-1.,1.));
   float NL = max(dot(nor, lig),0.);
   float NV = max(dot(nor, -dir),0.);
   NV =  pow(1.-NV, 3.);
 
   float bli =  max(dot(normalize(lig+-dir), nor), 0.);
-  bli = pow(bli, 80. - beat*40);
+  bli = pow(bli, 80.);
 
   float c = NL + NV * 0.5 + bli;
   return vec3(c) * getRefTexture(nor, dir);
 }
+
 
 mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
     vec3 cw = normalize(ta-ro);
@@ -978,33 +815,29 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.5, 3.0,19.5);
+    vec3 eye = vec3(-1.0, -0.5, 19);
+    //vec3 eye = vec3(.0, 0., 19.5);
 
-    vec3 ta = vec3( -0.5, -0.9, 0.5 );
+    vec3 ta = vec3( .0, .0, 0. );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 12.3;
+    float fov = 12.0;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
+
     vec3 color;
-    vec3 bgColor = vec3(0.1, 0.35, 0.75);
+    vec3 bgColor = vec3(0.0, 0.0, 0.0);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
-        vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
-        float shadow  = softshadow(collision, lightDirection, 0.02, 2.5 );
-        color = calculateColor2(collision, dir);
+        vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );
+        color = calculateColor(collision, dir);
 
-        shadow = mix(shadow, 1.0, 0.7);
-        color = color * shadow;
-        float fogFactor = exp(collision.z * 0.04);
+        float fogFactor = exp(collision.z * 0.001);
         color = mix(bgColor, color, fogFactor);
     } else {
         color = bgColor;
     }
 
-    //
-    //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
     fragColor = vec4(color , 1.0);
-    //fragColor = vec4(vec3(1.,0.,0.), 1.);
 }

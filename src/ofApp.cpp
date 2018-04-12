@@ -123,7 +123,7 @@ void ofApp::setupAudio(){
     oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
 
     //sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
-    sample.load(ofToDataPath("music/repeat.wav"));
+    sample.load(ofToDataPath("music/repeat3.wav"));
     ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
     ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 4);
 

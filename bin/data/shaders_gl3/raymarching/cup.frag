@@ -801,11 +801,7 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    float x = -1.8 + noise(iGlobalTime * 0.5) * 8.8;
     vec3 eye = vec3(-1.8, -2.5, 19);
-//    /vec3 eye = vec3(0., -1.5, 14.5);
-
-    //vec3 ta = vec3( -0.5, -0.9, 0.5 );
     vec3 ta = vec3( -0.0, -1.0, 0. );
     mat3 camera = setCamera( eye, ta, 0.0 );
     float fov = 25.0;
@@ -815,7 +811,6 @@ void main(){
 
     vec3 color;
     vec3 bgColor = vec3(0.0, 0.0, 0.0);
-    //vec3 bgColor = vec3(1.0, 0.2, 0.5);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.99) * dir );
