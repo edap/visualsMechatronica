@@ -38,14 +38,6 @@ void ofApp::setup(){
 }
 
 void ofApp::update(){
-//    cout << ofGetElapsedTimef() << endl;
-//    if(audioDisabled == true){
-//        cout << "dis" << endl;
-//        if (ofGetElapsedTimef() > 5.00){
-//            cout << "en" << endl;
-//            audioDisabled = false;
-//        }
-//    }
 
     ofxGlobalContext::Manager::defaultManager().update();
     SM.update();
@@ -109,11 +101,18 @@ void ofApp::switchScene(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    cout << key << endl;
+
     switchScene(key);
     switchBand(key);
 
     if(key == 'g') drawGui = !drawGui;
+
+    if(key == 'm'){
+        auto filename = ofToString(ofGetElapsedTimef())+".jpg";
+        img.grabScreen(0,0,ofGetWidth(), ofGetHeight());
+
+        img.save(filename, OF_IMAGE_QUALITY_BEST);
+    }
 }
 
 void ofApp::setupAudio(){
@@ -122,8 +121,7 @@ void ofApp::setupAudio(){
     fft.setup(1024, 512, 256);
     oct.setup(44100, 1024, 2); // meno esempi, piu' facile da analizzare
 
-    //sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
-    sample.load(ofToDataPath("music/repeat3.wav"));
+    sample.load(ofToDataPath("music/I-Am-Mensch.wav"));
     ofxMaxiSettings::setup(sampleRate, 2, bufferSize);
     ofSoundStreamSetup(2, 0, this, sampleRate, bufferSize, 4);
 

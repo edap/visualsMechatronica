@@ -53,4 +53,6 @@ private:
     //graphics vars
     ofFbo                 finalFbo;
     bool                  drawGui = false;
+
+    ofImage img;
 };

@@ -4,3 +4,4 @@ bin/data/*.mov
 bin/data/*.mp4
 bin/data/textures/transparents/new/*
 src/*.autosave
+*.jpg

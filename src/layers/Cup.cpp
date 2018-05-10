@@ -19,7 +19,6 @@
 
         float beat = $Context(AudioAnalysis)->getFilteredBand(nBand, smoothVal) * audioMag;
 
-
         shader.setUniform1f("iGlobalTime", time);
         shader.setUniform1f("beat", beat);
         shader.setUniform2fv("resolution", resolution);
