@@ -1,6 +1,13 @@
 #version 150
 
 uniform sampler2D tex0;
+uniform sampler2D tex1;
+uniform sampler2D tex2;
+uniform sampler2D tex3;
+uniform sampler2D tex4;
+uniform sampler2D tex5;
+uniform sampler2D tex6;
+
 uniform vec2 resolution;
 uniform float iGlobalTime;
 
@@ -40,7 +47,11 @@ float sdTorus( vec3 p, vec2 t ){
 }
 
 float bendTorus( vec3 p, vec2 dim ){
-    float wave = sin(iGlobalTime * 0.2) * 2.2;
+//    float f = 0.2;
+//    float amp = 2.2;
+    float f = 0.2;
+    float amp = 2.2;
+    float wave = sin(iGlobalTime * f) * amp;
     float c = cos(wave*p.y);
     float s = sin(wave*p.y);
     mat2  m = mat2(c,-s,s,c);
@@ -103,7 +114,7 @@ float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
     return clamp( res, 0.0, 1.0 );
 }
 
-
+// others light http://www.jordanstevenstechart.com/lighting-models
 float ao( in vec3 pos, in vec3 nor ){
     float occ = 0.0;
     float sca = 1.0;
@@ -145,7 +156,7 @@ float fresnel(vec3 normal, vec3 dir){
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    vec4 color = texture(tex0, (0.5 * (r.xy) + .5));
+    vec4 color = texture(tex5, (0.5 * (r.xy) + .5));
     return color.xyz;
 }
 
@@ -158,8 +169,11 @@ vec3 calculateColor(vec3 pos, vec3 dir){
     float specLight = specular(normal, dir);
     float fresnelLight = fresnel(normal, dir);
     float ambientOcc = ao(pos, normal);
-    color = (diffLight + specLight + fresnelLight) * colTex;
-    return colTex;
+    color = (specLight ) * colTex;
+    //color = (specLight + fresnelLight + ambientOcc) * colTex;
+    //color = (specLight + fresnelLight + diffLight) * colTex;
+
+    return color;
 }
 
 mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
@@ -172,7 +186,10 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
 
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
-    vec3 eye = vec3(0.5, 3.0,19.5);
+    float xEye = sin(iGlobalTime) * 0.5;
+    float yEye = cos(iGlobalTime) * 3;
+    //vec3 eye = vec3(0.5, 3.0,9.5);
+    vec3 eye = vec3(xEye, yEye,9.5);
 
     vec3 ta = vec3( -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
@@ -183,11 +200,11 @@ void main(){
 
     vec3 color;
     //vec3 bgColor = vec3(0.1, 0.35, 0.75);
-    vec3 bgColor = vec3(0.0, 0.0, 0.0);
+    vec3 bgColor = vec3(0.8, 0.4, 0.2);
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
-        float shadow  = softshadow(collision, lightDirection, 0.02, 2.5 );
+        float shadow  = softshadow(collision, lightDirection, 0.2, 4.5 );
         color = calculateColor(collision, dir);
 
         shadow = mix(shadow, 1.0, 0.7);

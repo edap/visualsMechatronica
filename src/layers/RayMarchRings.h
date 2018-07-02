@@ -14,4 +14,15 @@ public:
 
 private:
     ofImage image0;
+
+    ofImage image1;
+    ofImage image2;
+    ofImage image3;
+    ofImage image4;
+    ofImage image5;
+    ofImage image6;
+    ofImage image7;
+    ofImage image8;
+    ofImage image9;
+    ofImage image10;
 };
