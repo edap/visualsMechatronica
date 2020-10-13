@@ -14,7 +14,14 @@ public:
     ofxFloatSlider audioSmooth; // this value has always to be bigger than 0
     ofxFloatSlider audioMag;
 
+    // var utili per gli screenshot
+    ofxFloatSlider u_camy;
+    ofxFloatSlider u_camx;
+    ofxFloatSlider u_fov;
+    ofxIntSlider u_texId;
+
     //prototyping vars
+    ofxFloatSlider time;
     ofxFloatSlider sdf1;
     ofxFloatSlider sdf2;
     ofxIntSlider sdfOp;
@@ -24,5 +31,6 @@ public:
     ofxIntSlider sdfSolidId2;
     ofxIntSlider sdfModelId;
     ofxVec3Slider sdfSolid2Pos;
+    ofParameter<ofColor> color;
 };
 

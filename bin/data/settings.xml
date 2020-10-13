@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<group>
+	<audioSmooth>0.5</audioSmooth>
+	<audioMag>0.05</audioMag>
+	<sdfSize1>0.5</sdfSize1>
+	<sdfSize2>0.5</sdfSize2>
+	<sdf_Op>11</sdf_Op>
+	<sdfOpRadius>0.7</sdfOpRadius>
+	<sdfOpStairs>4</sdfOpStairs>
+	<sdfSolidId1>2</sdfSolidId1>
+	<sdfSolidId2>5</sdfSolidId2>
+	<sdfSolid2Pos>0, 0, 0</sdfSolid2Pos>
+	<sdfModelId>4</sdfModelId>
+	<color>92, 179, 114, 255</color>
+</group>

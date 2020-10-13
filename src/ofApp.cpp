@@ -27,7 +27,7 @@ void ofApp::setup(){
     SM.addScene<MercurySketch>();
     SM.changeScene("Scene0");
 
-    finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGB);
+    finalFbo.allocate( ofGetWidth(),ofGetHeight(), GL_RGBA);
     finalFbo.begin();
     ofClear(255,255,255, 0);
     finalFbo.end();
@@ -43,7 +43,8 @@ void ofApp::update(){
     SM.update();
 
     finalFbo.begin();
-    ofClear(0, 0, 0, 255);
+    //ofClear(0, 0, 0, 1);
+    ofClear(255, 255, 255, 0); // 0 is important. this is for transparent BG.
     SM.draw();
     finalFbo.end();
 
@@ -108,10 +109,13 @@ void ofApp::keyPressed(int key){
     if(key == 'g') drawGui = !drawGui;
 
     if(key == 'm'){
-        auto filename = ofToString(ofGetElapsedTimef())+".jpg";
+        auto filename = ofToString(ofGetElapsedTimef())+".png";
         img.grabScreen(0,0,ofGetWidth(), ofGetHeight());
 
-        img.save(filename, OF_IMAGE_QUALITY_BEST);
+        ofPixels pix;
+        finalFbo.readToPixels(pix);
+        ofSaveImage(pix, filename, OF_IMAGE_QUALITY_BEST);
+        //img.save(filename, OF_IMAGE_QUALITY_BEST);
     }
 }
 

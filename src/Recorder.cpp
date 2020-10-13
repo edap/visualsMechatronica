@@ -6,7 +6,8 @@ Recorder::Recorder(){
     fileExt = ".mov";
     // see available codecs in ffmpeg with 'ffmpeg -codecs'. In my experience, h264 leads to better results
     vidRecorder.setVideoCodec("h264");
-    vidRecorder.setVideoBitrate("30000k"); // try 20M to have high res, but slower performances
+    //vidRecorder.setVideoBitrate("30000k"); // try 20M to have high res, but slower performances
+    vidRecorder.setVideoBitrate("50M"); // 50mb works just with certain shaders
 }
 
 void Recorder::setup(int _sampleRate, int _fps, int _nChannels){
@@ -22,6 +23,7 @@ void Recorder::setup(int _sampleRate, int _fps, int _nChannels){
 }
 
 void Recorder::videoRecEvent(ofKeyEventArgs& args){
+    ofLog() << args.key;
     if (args.key == 43) {
         bRecording = !bRecording;
         if (bRecording && !vidRecorder.isInitialized()) {

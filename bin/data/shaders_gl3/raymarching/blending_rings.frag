@@ -8,14 +8,22 @@ uniform sampler2D tex4;
 uniform sampler2D tex5;
 uniform sampler2D tex6;
 
+uniform float u_camx;
+uniform float u_camy;
+uniform float u_fov;
+uniform int u_texId;
+
+
 uniform vec2 resolution;
 uniform float iGlobalTime;
+uniform vec4 bgCol;
 
 in vec2 vTexCoord;
 out vec4 fragColor;
 
-const int MAX_MARCHING_STEPS = 64;
-const float EPSILON = 0.0011;
+const int MAX_MARCHING_STEPS = 128;
+const float EPSILON = 0.0001;
+//const float EPSILON = 0.03; per gli screenshot, diminuisce l'aliasing
 const float NEAR_CLIP = 0.0;
 const float FAR_CLIP = 100.00;
 
@@ -46,17 +54,46 @@ float sdTorus( vec3 p, vec2 t ){
     return length(q)-t.y;
 }
 
+vec4 getTexCol(int texId, vec3 r){
+    vec4 col;
+    switch (int(texId)) {
+            case 0: col = texture(tex0, (0.5 * (r.xy) + .5)); break;
+            case 1: col = texture(tex1, (0.5 * (r.xy) + .5)); break;
+            case 2: col = texture(tex2, (0.5 * (r.xy) + .5)); break;
+            case 3: col = texture(tex3, (0.5 * (r.xy) + .5)); break;
+            case 4: col = texture(tex4, (0.5 * (r.xy) + .5)); break;
+            case 5: col = texture(tex5, (0.5 * (r.xy) + .5)); break;
+            case 6: col = texture(tex6, (0.5 * (r.xy) + .5)); break;
+    }
+    return col;
+}
+
+//vec4 getTexCol(int texId, vec3 r)
+//{
+//    float myTexResolution = 2.4;
+//    vec2 p = r.xy;
+//    p = p*myTexResolution + 0.5;
+
+//    vec2 i = floor(p);
+//    vec2 f = p - i;
+//    f = f*f*f*(f*(f*6.0-15.0)+10.0);
+//    p = i + f;
+
+//    p = (p - 0.5)/myTexResolution;
+//    return texture( tex0, (0.5 * (p) + .5) );
+//}
+
 float bendTorus( vec3 p, vec2 dim ){
 //    float f = 0.2;
 //    float amp = 2.2;
-    float f = 0.2;
-    float amp = 2.2;
-    float wave = sin(iGlobalTime * f) * amp;
+    float f = 0.005;
+    float amp = 4.2;
+    float wave = sin((iGlobalTime+ 405700.) * f) * 4.2;
     float c = cos(wave*p.y);
     float s = sin(wave*p.y);
     mat2  m = mat2(c,-s,s,c);
     vec3  q = vec3(m*p.xy,p.z);
-    return sdTorus(q, dim);
+    return sdTorus(q, dim); //usa q invece di p
 }
 
 float map(vec3 pos){
@@ -66,7 +103,7 @@ float map(vec3 pos){
     pos.xz = rotate(pos.xz, sin(iGlobalTime*freqOnXZ)*.7);
     pos.yz = rotate(pos.yz, cos(iGlobalTime*freqOnYZ)*.7);
 
-    float yOscFreq = 0.2;
+    float yOscFreq = .2;
     vec3 s3pos = vec3(0.,    cos(iGlobalTime*(yOscFreq*2.)+11.) * 0.56,  sin(iGlobalTime*.12) * -2.2) * 1.2;
     vec3 s4pos = vec3(2.55,  sin(iGlobalTime*(yOscFreq*2.)+2.) * 0.81,   cos(iGlobalTime*.3) * 0.4)   * 1.5;
     vec3 s5pos = vec3(-2.55, cos(iGlobalTime*(yOscFreq*4.)) * 0.73,      sin(iGlobalTime*.76) * 0.4)  * 1.7;
@@ -150,13 +187,15 @@ float specular(vec3 normal, vec3 dir){
 }
 
 float fresnel(vec3 normal, vec3 dir){
-    return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 2.0 );
+    // this was the normal one
+    //return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 2.0 );
+    return pow( clamp(1.0+dot(normal,dir),0.0,1.0), 4.0 );
 }
 
 vec3 getRefTexture(vec3 normal, vec3 dir) {
     vec3 eye = -dir;
     vec3 r = reflect( eye, normal );
-    vec4 color = texture(tex5, (0.5 * (r.xy) + .5));
+    vec4 color = getTexCol(u_texId, r);
     return color.xyz;
 }
 
@@ -169,11 +208,16 @@ vec3 calculateColor(vec3 pos, vec3 dir){
     float specLight = specular(normal, dir);
     float fresnelLight = fresnel(normal, dir);
     float ambientOcc = ao(pos, normal);
-    color = (specLight ) * colTex;
+    //color = (specLight ) * colTex;
     //color = (specLight + fresnelLight + ambientOcc) * colTex;
-    //color = (specLight + fresnelLight + diffLight) * colTex;
+    color = (specLight + fresnelLight + diffLight) * colTex;
 
     return color;
+}
+
+float rand(vec2 uv){
+    //return fract(cos(dot(uv, vec2(3.9898, 3.233))) * 437.5453);
+    return fract(sin(dot(uv, vec2(22.9898, 78.233))) * 4375.5453);
 }
 
 mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
@@ -184,23 +228,35 @@ mat3 setCamera( in vec3 ro, in vec3 ta, float cr ){
     return mat3( cu, cv, cw );
 }
 
+
+float map(float value, float min1, float max1, float min2, float max2){
+    float perc = (value - min1) / (max1 - min1);
+    return perc * (max2 - min2) + min2;;
+}
 void main(){
     vec2 uv = squareFrame(resolution.xy, gl_FragCoord.xy);
     float xEye = sin(iGlobalTime) * 0.5;
     float yEye = cos(iGlobalTime) * 3;
     //vec3 eye = vec3(0.5, 3.0,9.5);
-    vec3 eye = vec3(xEye, yEye,9.5);
+    vec3 eye = vec3(xEye, yEye,19.5);
+    //vec3 ta = vec3(-0.5, -0.9, 0.5 );
+    vec3 ta = vec3(u_camx,u_camy, 0.5 );
 
-    vec3 ta = vec3( -0.5, -0.9, 0.5 );
+    //vec3 ta = vec3( cos(iGlobalTime) * -0.5, -0.9, 0.5 );
     mat3 camera = setCamera( eye, ta, 0.0 );
-    float fov = 4.6;
+    //float fov = 45.6 - abs(sin(iGlobalTime*0.2)*35.);
+    //float fov = 10.6; // video mechatronica
+    float fov = u_fov;
+    //float fov = 3.6 + abs(cos(iGlobalTime * 0.2))* 3.6;
+    //float fov = 9.2 - abs(cos(iGlobalTime * 0.1))* 5.6;
     vec3 dir = camera * normalize(vec3(uv, fov));
 
     float shortestDistanceToScene = raymarching(eye, dir);
 
     vec3 color;
     //vec3 bgColor = vec3(0.1, 0.35, 0.75);
-    vec3 bgColor = vec3(0.8, 0.4, 0.2);
+    //vec3 bgColor = vec3(0.8, 0.4, 0.2);
+    vec3 bgColor = bgCol.xyz;
 
     if (shortestDistanceToScene < FAR_CLIP - EPSILON) {
         vec3 collision = (eye += (shortestDistanceToScene*0.995) * dir );
@@ -210,13 +266,16 @@ void main(){
         shadow = mix(shadow, 1.0, 0.7);
         color = color * shadow;
         float fogFactor = exp(collision.z * 0.04);
-        color = mix(bgColor, color, fogFactor);
+        fragColor = vec4(mix(bgColor, color, fogFactor), 1.0);
     } else {
-        color = bgColor;
-    }
+        fragColor = vec4(bgCol.xyz, 1.0);
+        //fragColor = vec4(bgCol.xyz , map(rand(uv),0.0, 1.0, 0.85, 1.0));
+    };
+
+    //fragColor = getTexCol(0, vec3(uv,0));
 
     //
     //vec4 color = texture(tex0, (0.5 * (uv.xy) + .5));
-    fragColor = vec4(color , 1.0);
+    //fragColor = vec4(color , 1.0);
     //fragColor = vec4(vec3(1.,0.,0.), 1.);
 }

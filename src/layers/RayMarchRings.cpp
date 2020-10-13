@@ -11,29 +11,37 @@ void RayMarchRings::loadAssets(){
 //    image6.load("textures/9a.jpg");
 
     image0.load("textures/punta-g-soldaten-ara2.jpg");
-    image1.load("textures/punta-g-soldaten-ara.jpg");
-    image2.load("textures/punta-missing.jpg");
+
+    //image1.load("textures/punta-g-soldaten-ara.jpg");
+    image1.load("textures/punta-alaintera.jpg");
+    image2.load("textures/argusianus-argus2.jpg");
 
 //    image3.load("textures/punta-scarlet-macaw3.jpg");
 //    image4.load("textures/punta-soldaten-ara.jpg");
 //    image5.load("textures/punta-soldaten-ara2.jpg");
 //    image6.load("textures/punta-rubrogenis.jpg");
 
-    image6.load("textures/punta-red-and-green-macao.jpg");
-    image5.load("textures/punta-alaintera.jpg");
-    image4.load("textures/punta-rubrogenis2.jpg");
-    image3.load("textures/punta-soldaten-ara.jpg");
+    image6.load("textures/ocellate-turkey-tex.jpg");
+    image5.load("textures/pink-necked-green-pigeon-big.jpg");
+    image4.load("textures/sonnenralle-full.png");
+    image3.load("textures/sunbittern3.jpg");
 
 }
 
 void RayMarchRings::setUniforms(){
     float resolution[] = { float(ofGetWidth()), float(ofGetHeight()) };
     float time = ofGetElapsedTimef();
+    if($Context(Panel)->time < $Context(Panel)->time.getMax()) {
+        time = $Context(Panel)->time;
+    }
+    auto bgCol = $Context(Panel)->color.get();
 
     //$Context(AppTime)->elapsed * 0.8;
 
     shader.setUniform1f("iGlobalTime",time);
     shader.setUniform2fv("resolution",resolution);
+    shader.setUniform4f("bgCol", bgCol);
+    //shader.setUniform3fv("bgColor", );
     shader.setUniformTexture("tex0",image0.getTexture(),0);
 
     shader.setUniformTexture("tex1", image1.getTexture(), 1);
@@ -42,6 +50,14 @@ void RayMarchRings::setUniforms(){
     shader.setUniformTexture("tex4", image4.getTexture(), 4);
     shader.setUniformTexture("tex5", image5.getTexture(), 5);
     shader.setUniformTexture("tex6", image6.getTexture(), 6);
+
+
+    shader.setUniform1f("u_camx", $Context(Panel)->u_camx);
+    shader.setUniform1f("u_camy", $Context(Panel)->u_camy);
+    shader.setUniform1f("u_fov", $Context(Panel)->u_fov);
+    shader.setUniform1f("u_fov", $Context(Panel)->u_fov);
+    shader.setUniform1i("u_texId", $Context(Panel)->u_texId);
+
 }
 
 

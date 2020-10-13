@@ -2,6 +2,7 @@
 #include "../Layer.h"
 #include "ofxAutoReloadedShader.h"
 #include "templates/SimpleFragment.h"
+#include "../context/Panel.h"
 
 using namespace ofxLayer;
 
